@@ -150,8 +150,8 @@ public class EvaluationResponse {
 
         badWordRecognizeResult.getCgec().forEach(result -> {
             WordSentenceEvaluation.WordEvaluation wordEvaluation = new WordSentenceEvaluation.WordEvaluation();
-            wordEvaluation.span.add(result.getTokenIdx().getFirst());
-            wordEvaluation.span.add(result.getTokenIdx().getFirst() + 1);
+            wordEvaluation.span.add(result.getTokenIdx().get(0));
+            wordEvaluation.span.add(result.getTokenIdx().get(0) + 1);
             wordEvaluation.type.put("level1", "还需努力");
             wordEvaluation.type.put("level2", "错别字错误");
             this.aiEvaluation.wordSentenceEvaluation.sentenceEvaluations.get(result.getParagraphId())
