@@ -20,7 +20,7 @@ jobs:
         with:
           cache: 'maven'
           java-version: '21'
-          distribution: 'correto'
+          distribution: 'oracle'
 
       - name: Cache Maven dependencies
         uses: actions/cache@v2
