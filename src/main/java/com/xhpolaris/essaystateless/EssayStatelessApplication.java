@@ -1,5 +1,6 @@
 package com.xhpolaris.essaystateless;
 
+import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,7 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EssayStatelessApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EssayStatelessApplication.class, args);
+        SpringApplication app = new SpringApplication(EssayStatelessApplication.class);
+        app.setBannerMode(Banner.Mode.OFF);
+        app.run(args);
     }
 
 }

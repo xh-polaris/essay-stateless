@@ -25,6 +25,8 @@ public class HttpClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
 
+        System.out.println("向 " + url + "发送异步请求");
+
         ResponseEntity<T> response;
         try {
             response = restTemplate.postForEntity(url, request, responseType);
