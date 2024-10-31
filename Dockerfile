@@ -4,7 +4,7 @@ ARG WORKDIR=/opt/run
 
 WORKDIR ${WORKDIR}
 COPY run/lib run/lib
-COPY essay-stateless/target/essay-stateless-1.0.0.jar essay-stateless.jar
+COPY ./target/essay-stateless-1.0.0.jar essay-stateless.jar
 
 EXPOSE 8888
 
@@ -14,4 +14,4 @@ ENV LC_ALL=zh_CN.UTF-8
 ENV TZ=Asia/Shanghai
 ENV SPRING_PROFILES_ACTIVE=prod
 
-ENTRYPOINT java -jar essay-stateless.jar
+ENTRYPOINT ["java", "-jar", "essay-stateless.jar"]
