@@ -1,4 +1,4 @@
-package com.xhpolaris.essaystateless.entity.evaluation;
+package com.xhpolaris.essaystateless.entity.request;
 
 import lombok.Data;
 

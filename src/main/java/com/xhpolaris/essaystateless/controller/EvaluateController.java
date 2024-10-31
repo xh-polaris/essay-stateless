@@ -1,7 +1,7 @@
 package com.xhpolaris.essaystateless.controller;
 
 import com.xhpolaris.essaystateless.entity.evaluation.EvaluationResponse;
-import com.xhpolaris.essaystateless.entity.evaluation.EvaluateRequest;
+import com.xhpolaris.essaystateless.entity.request.EvaluateRequest;
 import com.xhpolaris.essaystateless.service.EvaluateService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
