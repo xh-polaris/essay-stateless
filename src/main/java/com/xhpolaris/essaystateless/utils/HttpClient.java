@@ -19,13 +19,13 @@ public class HttpClient {
 
     private final Environment env;
 
-    public <T> T postForEntity(String url, java.lang.Class<T> responseType, Map<String, String> body) throws RestClientException {
+    public <T> T postForEntity(String url, java.lang.Class<T> responseType, Map<String, Object> body) throws RestClientException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 
-        System.out.println("向 " + url + "发送异步请求");
+        System.out.println("向 " + url + "发送请求");
 
         ResponseEntity<T> response;
         try {
@@ -37,8 +37,7 @@ public class HttpClient {
         }
     }
 
-
-    public String buildEvaluateURL(String route) {
-        return "http://" + env.getProperty("api.comment") + "/" + route;
+    public String getURL(String url) {
+        return env.getProperty("api." + url);
     }
 }
