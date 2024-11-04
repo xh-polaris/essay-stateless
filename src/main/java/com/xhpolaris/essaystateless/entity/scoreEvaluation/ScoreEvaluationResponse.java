@@ -1,5 +1,6 @@
 package com.xhpolaris.essaystateless.entity.scoreEvaluation;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -126,6 +127,7 @@ public class ScoreEvaluationResponse {
         private List<WordHighlights> rhetoric;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Data
     private static class WordHighlights {
         @JsonProperty("end_pos")
@@ -134,6 +136,7 @@ public class ScoreEvaluationResponse {
         @JsonProperty("start_pos")
         private Integer startPos;
         private String type;
+        private List<String> types;
     }
 
     @Data

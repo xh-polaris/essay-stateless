@@ -25,7 +25,7 @@ public class EvaluateController {
     }
 
     @PostMapping("/score")
-    public ScoreEvaluationResponse azureEvaluate(@RequestBody ScoreEvaluationRequest req) throws Exception {
+    public ScoreEvaluationResponse scoreEvaluate(@RequestBody ScoreEvaluationRequest req) throws Exception {
         ScoreEvaluationResponse response = evaluateService.evaluateScore(req);
         if (response == null)
             throw new Exception("调用失败，请重试");
