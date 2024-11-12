@@ -15,7 +15,7 @@ public class TraceConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new TraceInterceptor())
-                .addPathPatterns("/api/**")  // 拦截的路径
+                .addPathPatterns("/**")  // 拦截的路径
                 .excludePathPatterns("/public/**");  // 排除的路径
     }
 }
