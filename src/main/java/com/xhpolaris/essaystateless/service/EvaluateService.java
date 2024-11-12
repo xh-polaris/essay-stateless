@@ -8,15 +8,16 @@ import com.xhpolaris.essaystateless.entity.request.ScoreEvaluationRequest;
 import com.xhpolaris.essaystateless.entity.scoreEvaluation.ScoreEvaluationResponse;
 import com.xhpolaris.essaystateless.utils.HttpClient;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class EvaluateService {
 
     private final HttpClient httpClient;
@@ -52,7 +53,7 @@ public class EvaluateService {
         long end = System.currentTimeMillis();
 
         long totalTime = end - start;
-        System.out.println("异步调用总耗时: " + totalTime + " 毫秒");
+        log.info("异步调用总耗时: {} 毫秒", totalTime);
 
         EvaluationResponse response = new EvaluationResponse(mv);
         response.setTitle(title);

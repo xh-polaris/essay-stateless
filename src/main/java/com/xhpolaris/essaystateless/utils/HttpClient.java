@@ -1,6 +1,7 @@
 package com.xhpolaris.essaystateless.utils;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,10 +12,10 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
-import java.util.Objects;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class HttpClient {
 
     private final Environment env;
@@ -25,7 +26,7 @@ public class HttpClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 
-        System.out.println("向 " + url + "发送请求");
+        log.info("向 {}发送请求", url);
 
         ResponseEntity<T> response;
         try {
