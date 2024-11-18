@@ -4,6 +4,7 @@ import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import com.xhpolaris.essaystateless.entity.evaluation.EvaluationResponse;
 import com.xhpolaris.essaystateless.entity.evaluation.api.*;
 import com.xhpolaris.essaystateless.entity.evaluation.fields.ModelVersion;
+import com.xhpolaris.essaystateless.entity.request.ModuleRequest;
 import com.xhpolaris.essaystateless.entity.request.ScoreEvaluationRequest;
 import com.xhpolaris.essaystateless.entity.scoreEvaluation.ScoreEvaluationResponse;
 import com.xhpolaris.essaystateless.utils.HttpClient;
@@ -24,6 +25,9 @@ public class EvaluateService {
 
     private final ModelVersion mv;
 
+    /**
+     * 对应beta版接口 (beta为学校算法代号)
+     */
     public EvaluationResponse evaluate(String title, String content) {
         // 将标题和作文转成简体中文
         title = ZhConverterUtil.toSimple(title);
@@ -66,6 +70,9 @@ public class EvaluateService {
 
     }
 
+    /*
+     * 对应score接口
+     */
     public ScoreEvaluationResponse evaluateScore(ScoreEvaluationRequest req) {
         Map<String, Object> essay = new HashMap<>();
         essay.put("title", req.getTitle());
@@ -74,7 +81,69 @@ public class EvaluateService {
         essay.put("grade", req.getGrade());
         essay.put("lang", req.getLang());
 
-        return syncCall("score", ScoreEvaluationResponse.class,essay);
+        return syncCall("score", ScoreEvaluationResponse.class, essay);
+    }
+
+    /*
+     * 调用下游算法，通用类型
+     */
+    public APICommonResponse commonModuleEvaluate(ModuleRequest req, String type) {
+        Map<String, Object> essay = new HashMap<>();
+
+        if (req.title != null)
+            essay.put("title", req.getTitle());
+
+        essay.put("essay", req.getEssay());
+        return switch (type) {
+            case "overall" -> syncCall("overall", APICommonResponse.class, essay);
+            case "suggestion" -> syncCall("suggestion", APICommonResponse.class, essay);
+            case "paragraph" -> syncCall("paragraph", APICommonResponse.class, essay);
+            default -> null;
+        };
+    }
+
+    /*
+     * 调用下游算法，流畅度
+     */
+    public APIFluencyResponse fluencyModuleEvaluate(ModuleRequest req) {
+        Map<String, Object> essay = new HashMap<>();
+        if (req.title != null)
+            essay.put("title", req.getTitle());
+        essay.put("essay", req.getEssay());
+        return syncCall("fluency", APIFluencyResponse.class, essay);
+    }
+
+    /*
+     * 调用下游算法，好词好句
+     */
+    public APIWordSentenceResponse wordSentenceModuleEvaluate(ModuleRequest req) {
+        Map<String, Object> essay = new HashMap<>();
+        if (req.title != null)
+            essay.put("title", req.getTitle());
+        essay.put("essay", req.getEssay());
+        return syncCall("word_sentence", APIWordSentenceResponse.class, essay);
+    }
+
+    /*
+     * 调用下游算法，文本检错
+     */
+    public APIBadWordResponse badWordModuleEvaluate(ModuleRequest req) {
+        Map<String, Object> essay = new HashMap<>();
+        if (req.title != null)
+            essay.put("title", req.getTitle());
+        essay.put("essay", req.getEssay());
+        return syncCall("cgec", APIBadWordResponse.class, essay);
+    }
+
+    /*
+     * 调用下游算法，表达
+     */
+    public APIExpressionResponse expressionModuleEvaluate(ModuleRequest req) {
+        Map<String, Object> essay = new HashMap<>();
+        if (req.title != null)
+            essay.put("title", req.getTitle());
+        essay.put("essay", req.getEssay());
+        return syncCall("expression", APIExpressionResponse.class, essay);
     }
 
     private <T> CompletableFuture<T> asyncCall(String url, Class<T> responseClass, Map<String, Object> body) {

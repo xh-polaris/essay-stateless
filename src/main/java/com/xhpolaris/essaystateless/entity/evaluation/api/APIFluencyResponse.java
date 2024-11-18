@@ -1,5 +1,6 @@
 package com.xhpolaris.essaystateless.entity.evaluation.api;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class APIFluencyResponse extends APICommonResponse {
     private FluencyData data;
 
@@ -31,6 +33,8 @@ public class APIFluencyResponse extends APICommonResponse {
     @Getter
     @Setter
     public static class SickSentence {
+        @JsonProperty("coarse_label")
+        private String coarseLabel;
         private String label;
         @JsonProperty("paragraph_id")
         private Integer paragraphId;

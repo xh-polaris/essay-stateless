@@ -15,6 +15,9 @@ public class EvaluateController {
 
     private final EvaluateService evaluateService;
 
+    /*
+     * beta版批改(学校)
+     */
     @PostMapping
     public EvaluationResponse evaluate(@RequestBody EvaluateRequest req) throws Exception {
         EvaluationResponse response = evaluateService.evaluate(req.title, req.content);
@@ -24,6 +27,9 @@ public class EvaluateController {
         return response;
     }
 
+    /*
+     * score版接口(微软)
+     */
     @PostMapping("/score")
     public ScoreEvaluationResponse scoreEvaluate(@RequestBody ScoreEvaluationRequest req) throws Exception {
         ScoreEvaluationResponse response = evaluateService.evaluateScore(req);
@@ -31,5 +37,4 @@ public class EvaluateController {
             throw new Exception("调用失败，请重试");
         return response;
     }
-
 }
