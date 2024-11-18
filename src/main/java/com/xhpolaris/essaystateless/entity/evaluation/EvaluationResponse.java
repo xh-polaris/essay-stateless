@@ -117,17 +117,6 @@ public class EvaluationResponse {
             sentenceEvaluation.label = sent.getLabel();
             Map<String, String> type = new HashMap<>();
             type.put("level1", "作文亮点");
-            switch (sent.getLabel()) {
-                case 1:
-                    type.put("level2", "比喻");
-                    break;
-                case 2:
-                    type.put("level2", "拟人");
-                    break;
-                case 3:
-                    type.put("level2", "排比");
-                    break;
-            }
             sentenceEvaluation.type = type;
         });
         wordSentenceData.getResults().getGoodWords().forEach(word -> {

@@ -1,6 +1,5 @@
 package com.xhpolaris.essaystateless.entity.evaluation.fields;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +17,7 @@ public class WordSentenceEvaluation {
     @Data
     public static class SentenceEvaluation {
         public Boolean isGoodSentence;
-        public int label;
+        public String label;
         public List<WordEvaluation> wordEvaluations = new ArrayList<>();
         public Map<String, String> type = new HashMap<>();
     }
@@ -29,10 +28,4 @@ public class WordSentenceEvaluation {
         public Map<String, String> type = new HashMap<>();
     }
 
-    @Data
-    @Builder
-    public static class Type {
-        public String level1;
-        public String level2;
-    }
 }

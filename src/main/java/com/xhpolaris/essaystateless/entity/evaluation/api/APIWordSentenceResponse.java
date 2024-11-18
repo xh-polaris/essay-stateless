@@ -17,6 +17,8 @@ public class APIWordSentenceResponse extends APICommonResponse {
         @JsonProperty("sents")
         private List<List<String>> sentences;
         private WordSentenceResult results;
+        private Integer grade;
+        private String type;
     }
 
     @Getter
@@ -47,6 +49,6 @@ public class APIWordSentenceResponse extends APICommonResponse {
         private Integer paragraphId;
         @JsonProperty("sent_id")
         private Integer sentId;
-        private Integer label;
+        private String label;
     }
 }
