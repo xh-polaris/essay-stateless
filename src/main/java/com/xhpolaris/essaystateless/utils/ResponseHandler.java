@@ -28,6 +28,7 @@ public class ResponseHandler {
 
                 if (sentenceStart <= index && index < sentenceEnd) {
                     int relativeIndex = index - sentenceStart; // 计算相对索引
+                    relativeIndex -= paragraphIndex;  // 修正下游算法不考虑/n带来的误差
                     return new GrammarPosition(paragraphIndex, sentenceIndex, relativeIndex);
                 }
 
