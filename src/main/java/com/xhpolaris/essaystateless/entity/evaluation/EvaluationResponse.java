@@ -5,10 +5,13 @@ import com.xhpolaris.essaystateless.entity.evaluation.fields.ExpressionEvaluatio
 import com.xhpolaris.essaystateless.entity.evaluation.fields.ModelVersion;
 import com.xhpolaris.essaystateless.entity.evaluation.fields.ParagraphEvaluation;
 import com.xhpolaris.essaystateless.entity.evaluation.fields.WordSentenceEvaluation;
+import com.xhpolaris.essaystateless.utils.ResponseHandler;
 import lombok.Data;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+
+import static com.xhpolaris.essaystateless.utils.ResponseHandler.getSentenceRelativeIndex;
 
 @Data
 public class EvaluationResponse {
@@ -21,12 +24,24 @@ public class EvaluationResponse {
         aiEvaluation = new AIEvaluation(mv);
     }
 
+    //    public void process(CompletableFuture<APICommonResponse> overall, CompletableFuture<APIFluencyResponse> fluency,
+//                        CompletableFuture<APIWordSentenceResponse> wordSentence, CompletableFuture<APIBadWordResponse> badWords,
+//                        CompletableFuture<APIExpressionResponse> expression, CompletableFuture<APICommonResponse> suggestion,
+//                        CompletableFuture<APICommonResponse> paragraph) {
+//        this.processWordSentence(get(wordSentence));
+//        this.processBadWords(get(badWords));
+//        this.processFluency(get(fluency));
+//        this.processParagraph(get(paragraph));
+//        this.processExpression(get(expression));
+//        this.processOverall(get(overall));
+//        this.processSuggestion(get(suggestion));
+//    }
     public void process(CompletableFuture<APICommonResponse> overall, CompletableFuture<APIFluencyResponse> fluency,
-                        CompletableFuture<APIWordSentenceResponse> wordSentence, CompletableFuture<APIBadWordResponse> badWords,
+                        CompletableFuture<APIWordSentenceResponse> wordSentence, CompletableFuture<APIGrammarInfoResponse> grammarInfo,
                         CompletableFuture<APIExpressionResponse> expression, CompletableFuture<APICommonResponse> suggestion,
                         CompletableFuture<APICommonResponse> paragraph) {
         this.processWordSentence(get(wordSentence));
-        this.processBadWords(get(badWords));
+        this.processGrammarInfo(get(grammarInfo));
         this.processFluency(get(fluency));
         this.processParagraph(get(paragraph));
         this.processExpression(get(expression));
@@ -145,6 +160,32 @@ public class EvaluationResponse {
             wordEvaluation.type.put("level2", "错别字错误");
             this.aiEvaluation.wordSentenceEvaluation.sentenceEvaluations.get(result.getParagraphId())
                     .get(result.getSendId()).getWordEvaluations().add(wordEvaluation);
+        });
+    }
+
+    private void processGrammarInfo(APIGrammarInfoResponse response) {
+        if (response == null)
+            return;
+        APIGrammarInfoResponse.GrammarInfo grammarInfo = response.getGrammar();
+
+        grammarInfo.getTypo().forEach(result -> {
+            // 获取全文中的索引
+            int endPos = result.getEndPos();
+            int startPos = result.getStartPos();
+            // 计算句子中相对索引
+            ResponseHandler.GrammarPosition gp = ResponseHandler.getSentenceRelativeIndex(this.text, startPos);
+            if (gp == null) {
+                return;
+            }
+            WordSentenceEvaluation.WordEvaluation wordEvaluation = new WordSentenceEvaluation.WordEvaluation();
+            wordEvaluation.span.add(gp.relativeIndex);
+            wordEvaluation.span.add(gp.relativeIndex + endPos - startPos);
+            wordEvaluation.type.put("level1", "还需努力");
+            wordEvaluation.type.put("level2", result.getType());
+            wordEvaluation.ori = result.getOri();
+            wordEvaluation.revised = result.getRevised();
+            this.aiEvaluation.wordSentenceEvaluation.sentenceEvaluations.get(gp.paragraphIndex)
+                    .get(gp.sentenceIndex).getWordEvaluations().add(wordEvaluation);
         });
     }
 

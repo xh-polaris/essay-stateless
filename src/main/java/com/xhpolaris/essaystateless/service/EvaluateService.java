@@ -43,14 +43,18 @@ public class EvaluateService {
         CompletableFuture<APICommonResponse> overall = asyncCall("overall", APICommonResponse.class, essay);
         CompletableFuture<APIFluencyResponse> fluency = asyncCall("fluency", APIFluencyResponse.class, essay);
         CompletableFuture<APIWordSentenceResponse> wordSentence = asyncCall("word_sentence", APIWordSentenceResponse.class, essay);
-        CompletableFuture<APIBadWordResponse> badWords = asyncCall("cgec", APIBadWordResponse.class, essay);
+        //CompletableFuture<APIBadWordResponse> badWords = asyncCall("cgec", APIBadWordResponse.class, essay);
+        CompletableFuture<APIGrammarInfoResponse> grammarInfo = asyncCall("grammar_info", APIGrammarInfoResponse.class, essay);
         CompletableFuture<APIExpressionResponse> expression = asyncCall("expression", APIExpressionResponse.class, essay);
         CompletableFuture<APICommonResponse> suggestion = asyncCall("suggestion", APICommonResponse.class, essay);
         CompletableFuture<APICommonResponse> paragraph = asyncCall("paragraph", APICommonResponse.class, essay);
 
 
         // 等待所有的异步任务完成
-        CompletableFuture.allOf(badWords, fluency, expression,
+        //CompletableFuture.allOf(badWords, fluency, expression,
+        //        suggestion, wordSentence,
+        //        paragraph, overall).join();
+        CompletableFuture.allOf(grammarInfo, fluency, expression,
                 suggestion, wordSentence,
                 paragraph, overall).join();
 
@@ -63,8 +67,8 @@ public class EvaluateService {
         response.setTitle(title);
 
         // 处理评估结果
-        response.process(overall, fluency, wordSentence, badWords, expression, suggestion, paragraph);
-
+        //response.process(overall, fluency, wordSentence, badWords, expression, suggestion, paragraph);
+        response.process(overall, fluency, wordSentence, grammarInfo, expression, suggestion, paragraph);
         // 返回
         return response;
 

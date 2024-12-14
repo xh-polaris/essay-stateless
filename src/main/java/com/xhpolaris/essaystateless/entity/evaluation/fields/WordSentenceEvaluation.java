@@ -26,6 +26,8 @@ public class WordSentenceEvaluation {
     public static class WordEvaluation {
         public List<Integer> span = new ArrayList<>();
         public Map<String, String> type = new HashMap<>();
+        public String ori;
+        public String revised;
     }
 
 }
