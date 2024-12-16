@@ -7,12 +7,14 @@ import com.xhpolaris.essaystateless.entity.evaluation.fields.ModelVersion;
 import com.xhpolaris.essaystateless.entity.request.ModuleRequest;
 import com.xhpolaris.essaystateless.entity.request.ScoreEvaluationRequest;
 import com.xhpolaris.essaystateless.entity.scoreEvaluation.ScoreEvaluationResponse;
+import com.xhpolaris.essaystateless.utils.BeeOcrUtil;
 import com.xhpolaris.essaystateless.utils.HttpClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -22,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 public class EvaluateService {
 
     private final HttpClient httpClient;
+    private final BeeOcrUtil beeOcrUtil;
 
     private final ModelVersion mv;
 
@@ -74,9 +77,18 @@ public class EvaluateService {
 
     }
 
+    /**
+     * beta版带ocr的批改接口
+     */
+    public EvaluationResponse betaOcrEvaluate(List<String> images) throws Exception {
+        List<String> result = beeOcrUtil.OcrAllWithBase64(images);
+        return evaluate(result.get(0), result.get(1));
+    }
+
     /*
      * 对应score接口
      */
+
     public ScoreEvaluationResponse evaluateScore(ScoreEvaluationRequest req) {
         Map<String, Object> essay = new HashMap<>();
         essay.put("title", req.getTitle());
@@ -87,10 +99,10 @@ public class EvaluateService {
 
         return syncCall("score", ScoreEvaluationResponse.class, essay);
     }
-
     /*
      * 调用下游算法，通用类型
      */
+
     public APICommonResponse commonModuleEvaluate(ModuleRequest req, String type) {
         Map<String, Object> essay = new HashMap<>();
 
@@ -105,10 +117,10 @@ public class EvaluateService {
             default -> null;
         };
     }
-
     /*
      * 调用下游算法，流畅度
      */
+
     public APIFluencyResponse fluencyModuleEvaluate(ModuleRequest req) {
         Map<String, Object> essay = new HashMap<>();
         if (req.title != null)
@@ -116,10 +128,10 @@ public class EvaluateService {
         essay.put("essay", req.getEssay());
         return syncCall("fluency", APIFluencyResponse.class, essay);
     }
-
     /*
      * 调用下游算法，好词好句
      */
+
     public APIWordSentenceResponse wordSentenceModuleEvaluate(ModuleRequest req) {
         Map<String, Object> essay = new HashMap<>();
         if (req.title != null)
@@ -127,10 +139,10 @@ public class EvaluateService {
         essay.put("essay", req.getEssay());
         return syncCall("word_sentence", APIWordSentenceResponse.class, essay);
     }
-
     /*
      * 调用下游算法，文本检错
      */
+
     public APIBadWordResponse badWordModuleEvaluate(ModuleRequest req) {
         Map<String, Object> essay = new HashMap<>();
         if (req.title != null)
@@ -138,10 +150,10 @@ public class EvaluateService {
         essay.put("essay", req.getEssay());
         return syncCall("cgec", APIBadWordResponse.class, essay);
     }
-
     /*
      * 调用下游算法，表达
      */
+
     public APIExpressionResponse expressionModuleEvaluate(ModuleRequest req) {
         Map<String, Object> essay = new HashMap<>();
         if (req.title != null)

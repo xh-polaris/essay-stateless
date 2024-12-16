@@ -1,6 +1,7 @@
 package com.xhpolaris.essaystateless.controller;
 
 import com.xhpolaris.essaystateless.entity.evaluation.EvaluationResponse;
+import com.xhpolaris.essaystateless.entity.request.BetaOcrEvaluateRequest;
 import com.xhpolaris.essaystateless.entity.request.EvaluateRequest;
 import com.xhpolaris.essaystateless.entity.request.ScoreEvaluationRequest;
 import com.xhpolaris.essaystateless.entity.scoreEvaluation.ScoreEvaluationResponse;
@@ -23,6 +24,18 @@ public class EvaluateController {
         EvaluationResponse response = evaluateService.evaluate(req.title, req.content);
         if (response == null) {
             throw new Exception("评估失败，请重试");
+        }
+        return response;
+    }
+
+    /*
+     * beta版ocr批改
+     */
+    @PostMapping("/beta/ocr")
+    public EvaluationResponse betaOcrEvaluate(@RequestBody BetaOcrEvaluateRequest req) throws Exception {
+        EvaluationResponse response = evaluateService.betaOcrEvaluate(req.getImages());
+        if (response == null) {
+            throw new Exception("批改失败，请重试");
         }
         return response;
     }
