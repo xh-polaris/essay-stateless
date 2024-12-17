@@ -23,38 +23,46 @@ public class BeeOcrUtil {
      */
 
     private final Environment env;
-    private final String BeeOcrUrl = env.getProperty("bee.ocr");
     private final ObjectMapper objectMapper;
 
     public List<String> OcrAllWithBase64(List<String> base64Codes) throws Exception {
+        String beeOcrUrl = env.getProperty("bee.ocr");
+        String secret = env.getProperty("bee.x-app-secret");
+        String key = env.getProperty("bee.x-app-key");
+
+        if (beeOcrUrl == null) {
+            throw new Exception("ocr 配置错误");
+        }
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        if (BeeOcrUrl == null) {
-            throw new Exception("ocr 配置错误");
-        }
+        headers.add("x-app-secret", secret);
+        headers.add("x-app-key", key);
 
         List<String> result = new ArrayList<>();
         try {
             for (String code : base64Codes) {
                 Map<String, String> body = new HashMap<>();
-                body.put("image", code);
+                body.put("image_base64", code);
                 HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
 
                 log.info("调用Bee-Ocr");
 
 
-                ResponseEntity<String> response = restTemplate.postForEntity(BeeOcrUrl, request, String.class);
+                ResponseEntity<String> response = restTemplate.postForEntity(beeOcrUrl, request, String.class);
                 // 处理识别逻辑
                 if (response.getStatusCode() == HttpStatus.OK) {
                     Map<String, Object> responseMap = objectMapper.readValue(response.getBody(), new TypeReference<>() {
                     });
-                    if ((int) responseMap.get("code") == 0) {
+                    if ((int) responseMap.get("code") != 0) {
                         throw new Exception("ocr 识别失败");
                     }
-                    Map<String, Object> data = objectMapper.convertValue(responseMap.get("data"), new TypeReference<Map<String, Object>>() {});  // 获取响应中的数据部分
-                    List<Map<String, Object>> lines = objectMapper.convertValue(data.get("lines"), new TypeReference<List<Map<String, Object>>>() {});
-                    List<Map<String, Object>> areas = objectMapper.convertValue(data.get("areas"), new TypeReference<List<Map<String, Object>>>() {});
+                    Map<String, Object> data = objectMapper.convertValue(responseMap.get("data"), new TypeReference<Map<String, Object>>() {
+                    });  // 获取响应中的数据部分
+                    List<Map<String, Object>> lines = objectMapper.convertValue(data.get("lines"), new TypeReference<List<Map<String, Object>>>() {
+                    });
+                    List<Map<String, Object>> areas = objectMapper.convertValue(data.get("areas"), new TypeReference<List<Map<String, Object>>>() {
+                    });
                     List<Integer> exclude = new ArrayList<>();
 
                     // 找出所有非手写区域，记录在exclude中
