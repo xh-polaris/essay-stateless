@@ -196,11 +196,11 @@ public class EvaluationResponse {
         for (int i = 0; i < this.aiEvaluation.paragraphEvaluations.size(); ++i) {
             this.aiEvaluation.expressionEvaluation.expressionEvaluations.add(new ArrayList<>());
         }
-        for (APIExpressionResponse.SentenceRelation sentenceRelation : response.getData().getResults().getSentenceRelations()) {
-            this.aiEvaluation.expressionEvaluation.expressionEvaluations.get(sentenceRelation.getParagraphId()).add(
-                    new ExpressionEvaluation.SubExpressionEvaluation(sentenceRelation.getStart(), sentenceRelation.getEnd(), sentenceRelation.getLabel())
-            );
-        }
+//        for (APIExpressionResponse.SentenceRelation sentenceRelation : response.getData().getResults().getSentenceRelations()) {
+//            this.aiEvaluation.expressionEvaluation.expressionEvaluations.get(sentenceRelation.getParagraphId()).add(
+//                    new ExpressionEvaluation.SubExpressionEvaluation(sentenceRelation.getStart(), sentenceRelation.getEnd(), sentenceRelation.getLabel())
+//            );
+//        }
         this.aiEvaluation.expressionEvaluation.expressDescription = response.getComment();
         this.aiEvaluation.expressionEvaluation.expressionScore = response.getScore();
     }
