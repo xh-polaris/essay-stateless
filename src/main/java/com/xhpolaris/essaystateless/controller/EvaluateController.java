@@ -23,7 +23,7 @@ public class EvaluateController {
     public EvaluationResponse evaluate(@RequestBody EvaluateRequest req) throws Exception {
         EvaluationResponse response = evaluateService.evaluate(req.title, req.content);
         if (response == null) {
-            throw new Exception("评估失败，请重试");
+            throw new Exception("批改失败，请重试");
         }
         return response;
     }
