@@ -31,7 +31,7 @@ public class EvaluateService {
     /**
      * 对应beta版接口 (beta为学校算法代号)
      */
-    public EvaluationResponse evaluate(String title, String content) {
+    public EvaluationResponse evaluate(String title, String content, Integer grade) {
         // 将标题和作文转成简体中文
         title = ZhConverterUtil.toSimple(title);
         content = ZhConverterUtil.toSimple(content);
@@ -39,6 +39,14 @@ public class EvaluateService {
         Map<String, Object> essay = new HashMap<>();
         essay.put("title", title);
         essay.put("essay", content);
+
+        APIEssayInfoResponse info = syncCall("essay_info", APIEssayInfoResponse.class, essay);
+        if (grade != null) {
+            info.gradeInt = grade;
+        }
+
+        essay.put("grade_int", info.gradeInt);
+        essay.put("essay_type", info.essayType);
 
         long start = System.currentTimeMillis();
 
@@ -82,7 +90,7 @@ public class EvaluateService {
      */
     public EvaluationResponse betaOcrEvaluate(List<String> images) throws Exception {
         List<String> result = beeOcrUtil.OcrAllWithBase64(images);
-        return evaluate(result.get(0), result.get(1));
+        return evaluate(result.get(0), result.get(1), null);
     }
 
     /*

@@ -1,7 +1,6 @@
 package com.xhpolaris.essaystateless.entity.evaluation;
 
 import com.xhpolaris.essaystateless.entity.evaluation.api.*;
-import com.xhpolaris.essaystateless.entity.evaluation.fields.ExpressionEvaluation;
 import com.xhpolaris.essaystateless.entity.evaluation.fields.ModelVersion;
 import com.xhpolaris.essaystateless.entity.evaluation.fields.ParagraphEvaluation;
 import com.xhpolaris.essaystateless.entity.evaluation.fields.WordSentenceEvaluation;
@@ -10,8 +9,6 @@ import lombok.Data;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-
-import static com.xhpolaris.essaystateless.utils.ResponseHandler.getSentenceRelativeIndex;
 
 @Data
 public class EvaluationResponse {
@@ -63,6 +60,7 @@ public class EvaluationResponse {
         List<String> level2Wrong = new ArrayList<>(Arrays.asList(
                 "错别字错误", "缺字漏字", "缺少标点", "错用标点", "成分残缺型错误", "成分赘余型错误", "成分搭配不当型错误", "不合逻辑"
         ));
+        // TODO 好句就不会再分析病句
         for (APIFluencyResponse.SickSentence sickSentence : sickSentences) {
             if (this.aiEvaluation.wordSentenceEvaluation.sentenceEvaluations
                     .get(sickSentence.getParagraphId()).get(sickSentence.getSentenceId()).getIsGoodSentence()

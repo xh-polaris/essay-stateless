@@ -21,7 +21,7 @@ public class EvaluateController {
      */
     @PostMapping
     public EvaluationResponse evaluate(@RequestBody EvaluateRequest req) throws Exception {
-        EvaluationResponse response = evaluateService.evaluate(req.title, req.content);
+        EvaluationResponse response = evaluateService.evaluate(req.title, req.content, req.grade);
         if (response == null) {
             throw new Exception("批改失败，请重试");
         }
