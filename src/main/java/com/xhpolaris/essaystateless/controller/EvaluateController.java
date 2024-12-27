@@ -33,7 +33,7 @@ public class EvaluateController {
      */
     @PostMapping("/beta/ocr")
     public EvaluationResponse betaOcrEvaluate(@RequestBody BetaOcrEvaluateRequest req) throws Exception {
-        EvaluationResponse response = evaluateService.betaOcrEvaluate(req.getImages());
+        EvaluationResponse response = evaluateService.betaOcrEvaluate(req.getImages(), req.getGrade());
         if (response == null) {
             throw new Exception("批改失败，请重试");
         }

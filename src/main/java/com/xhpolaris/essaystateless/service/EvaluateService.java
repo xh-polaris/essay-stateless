@@ -88,9 +88,9 @@ public class EvaluateService {
     /**
      * beta版带ocr的批改接口
      */
-    public EvaluationResponse betaOcrEvaluate(List<String> images) throws Exception {
+    public EvaluationResponse betaOcrEvaluate(List<String> images, Integer grade) throws Exception {
         List<String> result = beeOcrUtil.OcrAllWithBase64(images);
-        return evaluate(result.get(0), result.get(1), null);
+        return evaluate(result.get(0), result.get(1), grade);
     }
 
     /*
