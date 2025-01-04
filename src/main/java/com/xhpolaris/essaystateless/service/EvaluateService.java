@@ -62,9 +62,6 @@ public class EvaluateService {
 
 
         // 等待所有的异步任务完成
-        //CompletableFuture.allOf(badWords, fluency, expression,
-        //        suggestion, wordSentence,
-        //        paragraph, overall).join();
         CompletableFuture.allOf(grammarInfo, fluency, expression,
                 suggestion, wordSentence,
                 paragraph, overall).join();
@@ -89,7 +86,7 @@ public class EvaluateService {
      * beta版带ocr的批改接口
      */
     public EvaluationResponse betaOcrEvaluate(List<String> images, Integer grade) throws Exception {
-        List<String> result = beeOcrUtil.OcrAllWithBase64(images);
+        List<String> result = beeOcrUtil.OcrAll(images, "base64");
         return evaluate(result.get(0), result.get(1), grade);
     }
 

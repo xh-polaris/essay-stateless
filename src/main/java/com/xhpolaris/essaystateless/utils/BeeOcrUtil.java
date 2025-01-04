@@ -25,7 +25,7 @@ public class BeeOcrUtil {
     private final Environment env;
     private final ObjectMapper objectMapper;
 
-    public List<String> OcrAllWithBase64(List<String> base64Codes) throws Exception {
+    public List<String> OcrAll(List<String> items, String type) throws Exception {
         String beeOcrUrl = env.getProperty("bee.ocr");
         String secret = env.getProperty("bee.x-app-secret");
         String key = env.getProperty("bee.x-app-key");
@@ -41,9 +41,12 @@ public class BeeOcrUtil {
 
         List<String> result = new ArrayList<>();
         try {
-            for (String code : base64Codes) {
+            for (String item : items) {
                 Map<String, String> body = new HashMap<>();
-                body.put("image_base64", code);
+                if (type.equals("base64"))
+                    body.put("image_base64", item);
+                else if (type.equals("url"))
+                    body.put("image_url", item);
                 HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
 
                 log.info("调用Bee-Ocr");
