@@ -9,7 +9,6 @@ public class EssayStatelessApplication {
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(EssayStatelessApplication.class);
-        app.setBannerMode(Banner.Mode.OFF);
         app.run(args);
     }
 

@@ -2,15 +2,19 @@ package com.xhpolaris.essaystateless.entity.evaluation.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 @Setter
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class APIGrammarInfoResponse {
+public class APIGrammarInfoResponse extends APICommonResponse{
     private GrammarInfo grammar;
 
     @Setter

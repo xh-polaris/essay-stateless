@@ -34,6 +34,7 @@ public class HttpClient {
             return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
+            log.info("出错url {}",url);
             return null;
         }
     }
