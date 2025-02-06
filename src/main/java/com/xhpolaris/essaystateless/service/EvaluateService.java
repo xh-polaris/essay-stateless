@@ -40,7 +40,7 @@ public class EvaluateService {
         essay.put("title", title);
         essay.put("essay", content);
 
-        APIEssayInfoResponse info = syncCall("essay_info", APIEssayInfoResponse.class, essay);
+        APIEssayInfoResponse info = httpClient.syncCall("essay_info", APIEssayInfoResponse.class, essay);
         if (grade != null) {
             info.gradeInt = grade;
         }
@@ -51,14 +51,14 @@ public class EvaluateService {
         long start = System.currentTimeMillis();
 
         // 异步调用多个评估api，参数依次是url，返回的类型，文章内容map
-        CompletableFuture<APICommonResponse> overall = asyncCall("overall", APICommonResponse.class, essay);
-        CompletableFuture<APIFluencyResponse> fluency = asyncCall("fluency", APIFluencyResponse.class, essay);
-        CompletableFuture<APIWordSentenceResponse> wordSentence = asyncCall("word_sentence", APIWordSentenceResponse.class, essay);
-        //CompletableFuture<APIBadWordResponse> badWords = asyncCall("cgec", APIBadWordResponse.class, essay);
-        CompletableFuture<APIGrammarInfoResponse> grammarInfo = asyncCall("grammar_info", APIGrammarInfoResponse.class, essay);
-        CompletableFuture<APIExpressionResponse> expression = asyncCall("expression", APIExpressionResponse.class, essay);
-        CompletableFuture<APICommonResponse> suggestion = asyncCall("suggestion", APICommonResponse.class, essay);
-        CompletableFuture<APICommonResponse> paragraph = asyncCall("paragraph", APICommonResponse.class, essay);
+        CompletableFuture<APICommonResponse> overall = httpClient.asyncCall("overall", APICommonResponse.class, essay);
+        CompletableFuture<APIFluencyResponse> fluency = httpClient.asyncCall("fluency", APIFluencyResponse.class, essay);
+        CompletableFuture<APIWordSentenceResponse> wordSentence = httpClient.asyncCall("word_sentence", APIWordSentenceResponse.class, essay);
+        //CompletableFuture<APIBadWordResponse> badWords = httpClient.asyncCall("cgec", APIBadWordResponse.class, essay);
+        CompletableFuture<APIGrammarInfoResponse> grammarInfo = httpClient.asyncCall("grammar_info", APIGrammarInfoResponse.class, essay);
+        CompletableFuture<APIExpressionResponse> expression = httpClient.asyncCall("expression", APIExpressionResponse.class, essay);
+        CompletableFuture<APICommonResponse> suggestion = httpClient.asyncCall("suggestion", APICommonResponse.class, essay);
+        CompletableFuture<APICommonResponse> paragraph = httpClient.asyncCall("paragraph", APICommonResponse.class, essay);
 
 
         // 等待所有的异步任务完成
@@ -102,7 +102,7 @@ public class EvaluateService {
         essay.put("grade", req.getGrade());
         essay.put("lang", req.getLang());
 
-        return syncCall("score", ScoreEvaluationResponse.class, essay);
+        return httpClient.syncCall("score", ScoreEvaluationResponse.class, essay);
     }
     /*
      * 调用下游算法，通用类型
@@ -116,9 +116,9 @@ public class EvaluateService {
 
         essay.put("essay", req.getEssay());
         return switch (type) {
-            case "overall" -> syncCall("overall", APICommonResponse.class, essay);
-            case "suggestion" -> syncCall("suggestion", APICommonResponse.class, essay);
-            case "paragraph" -> syncCall("paragraph", APICommonResponse.class, essay);
+            case "overall" -> httpClient.syncCall("overall", APICommonResponse.class, essay);
+            case "suggestion" -> httpClient.syncCall("suggestion", APICommonResponse.class, essay);
+            case "paragraph" -> httpClient.syncCall("paragraph", APICommonResponse.class, essay);
             default -> null;
         };
     }
@@ -131,7 +131,7 @@ public class EvaluateService {
         if (req.title != null)
             essay.put("title", req.getTitle());
         essay.put("essay", req.getEssay());
-        return syncCall("fluency", APIFluencyResponse.class, essay);
+        return httpClient.syncCall("fluency", APIFluencyResponse.class, essay);
     }
     /*
      * 调用下游算法，好词好句
@@ -142,7 +142,7 @@ public class EvaluateService {
         if (req.title != null)
             essay.put("title", req.getTitle());
         essay.put("essay", req.getEssay());
-        return syncCall("word_sentence", APIWordSentenceResponse.class, essay);
+        return httpClient.syncCall("word_sentence", APIWordSentenceResponse.class, essay);
     }
     /*
      * 调用下游算法，文本检错
@@ -153,7 +153,7 @@ public class EvaluateService {
         if (req.title != null)
             essay.put("title", req.getTitle());
         essay.put("essay", req.getEssay());
-        return syncCall("cgec", APIBadWordResponse.class, essay);
+        return httpClient.syncCall("cgec", APIBadWordResponse.class, essay);
     }
     /*
      * 调用下游算法，表达
@@ -164,15 +164,7 @@ public class EvaluateService {
         if (req.title != null)
             essay.put("title", req.getTitle());
         essay.put("essay", req.getEssay());
-        return syncCall("expression", APIExpressionResponse.class, essay);
+        return httpClient.syncCall("expression", APIExpressionResponse.class, essay);
     }
-
-    private <T> CompletableFuture<T> asyncCall(String url, Class<T> responseClass, Map<String, Object> body) {
-        return CompletableFuture.supplyAsync(() -> httpClient.postForEntity(
-                httpClient.getURL(url), responseClass, body));
-    }
-
-    private <T> T syncCall(String url, Class<T> responseClass, Map<String, Object> body) {
-        return httpClient.postForEntity(httpClient.getURL(url), responseClass, body);
-    }
+    
 }

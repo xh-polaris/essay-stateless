@@ -12,6 +12,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @AllArgsConstructor
@@ -34,12 +35,21 @@ public class HttpClient {
             return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
-            log.info("出错url {}",url);
+            log.info("出错url {}", url);
             return null;
         }
     }
 
     public String getURL(String url) {
         return env.getProperty("api." + url);
+    }
+
+    public <T> CompletableFuture<T> asyncCall(String url, Class<T> responseClass, Map<String, Object> body) {
+        return CompletableFuture.supplyAsync(() -> this.postForEntity(
+                this.getURL(url), responseClass, body));
+    }
+
+    public <T> T syncCall(String url, Class<T> responseClass, Map<String, Object> body) {
+        return this.postForEntity(this.getURL(url), responseClass, body);
     }
 }
