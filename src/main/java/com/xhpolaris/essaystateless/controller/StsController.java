@@ -1,7 +1,5 @@
 package com.xhpolaris.essaystateless.controller;
 
-import com.xhpolaris.essaystateless.entity.location.LocationEssayResponse;
-import com.xhpolaris.essaystateless.entity.location.LocationSectionResponse;
 import com.xhpolaris.essaystateless.entity.ocr.BeeOcrResponse;
 import com.xhpolaris.essaystateless.entity.request.BeeOcrRequest;
 import com.xhpolaris.essaystateless.entity.request.LocationRequest;
@@ -39,19 +37,19 @@ public class StsController {
 
     }
 
-    @PostMapping("/location/position/essay/base64")
-    public LocationEssayResponse essayLocationBase64(@RequestBody LocationRequest req) throws Exception{
+    @PostMapping("/location/crop/essay/base64")
+    public String essayLocationBase64(@RequestBody LocationRequest req) throws Exception{
         try {
-            return locationService.essayLocationBase64(req.getImageBase64());
+            return locationService.essayCropLocationBase64(req.getImageBase64());
         } catch (Exception e) {
             throw new Exception("作文范围定位 调用失败");
         }
     }
 
-    @PostMapping("/location/position/section/base64")
-    public LocationSectionResponse sectionLocationBase64(@RequestBody LocationRequest req) throws Exception {
+    @PostMapping("/location/crop/section/base64")
+    public String[] sectionLocationBase64(@RequestBody LocationRequest req) throws Exception {
         try {
-            return locationService.sectionLocationBase64(req.getImageBase64());
+            return locationService.sectionCropLocationBase64(req.getImageBase64());
         } catch (Exception e) {
             throw new Exception("作文段落定位 调用失败");
         }
