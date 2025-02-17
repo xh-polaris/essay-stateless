@@ -9,7 +9,6 @@ package com.xhpolaris.essaystateless.service;
 
 import com.xhpolaris.essaystateless.entity.location.LocationEssayResponse;
 import com.xhpolaris.essaystateless.entity.location.LocationSectionResponse;
-import com.xhpolaris.essaystateless.entity.request.LocationRequest;
 import com.xhpolaris.essaystateless.utils.HttpClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +27,12 @@ public class LocationService {
 
     /**
      * 封装作文范围定位API
+     *
      * @param imageBase64 图片的base64编码
      * @return
      */
     public LocationEssayResponse essayLocationBase64(String imageBase64) {
+        imageBase64 = imageBase64.replace("data:image/jpeg;base64,","");
         Map<String, Object> data = new HashMap<>();
         data.put("image_base64", imageBase64);
         return httpClient.postForEntity(LOCATION_ESSAY, LocationEssayResponse.class, data);
@@ -39,10 +40,12 @@ public class LocationService {
 
     /**
      * 封装作文段落定位API
+     *
      * @param imageBase64 图片的base64编码
      * @return
      */
     public LocationSectionResponse sectionLocationBase64(String imageBase64) {
+        imageBase64 = imageBase64.replace("data:image/jpeg;base64,","");
         Map<String, Object> data = new HashMap<>();
         data.put("image_base64", imageBase64);
         return httpClient.postForEntity(LOCATION_SECTION, LocationSectionResponse.class, data);

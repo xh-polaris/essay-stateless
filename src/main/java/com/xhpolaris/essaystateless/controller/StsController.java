@@ -40,7 +40,7 @@ public class StsController {
     }
 
     @PostMapping("/location/position/essay/base64")
-    public LocationEssayResponse essayLocationBase64(@RequestBody LocationRequest req) throws Exception{
+    public LocationEssayResponse essayLocationBase64(@RequestBody LocationRequest req) throws Exception {
         try {
             return locationService.essayLocationBase64(req.getImageBase64());
         } catch (Exception e) {
