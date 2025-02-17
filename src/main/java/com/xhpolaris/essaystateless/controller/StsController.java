@@ -38,7 +38,7 @@ public class StsController {
     }
 
     @PostMapping("/location/crop/essay/base64")
-    public String essayLocationBase64(LocationRequest req) throws Exception{
+    public String essayLocationBase64(@RequestBody LocationRequest req) throws Exception {
         try {
             return locationService.essayCropLocationBase64(req.getImageBase64());
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class StsController {
     }
 
     @PostMapping("/location/crop/section/base64")
-    public String[] sectionLocationBase64(LocationRequest req) throws Exception {
+    public String[] sectionLocationBase64(@RequestBody LocationRequest req) throws Exception {
         try {
             return locationService.sectionCropLocationBase64(req.getImageBase64());
         } catch (Exception e) {

@@ -24,8 +24,6 @@ import java.util.Map;
 @Slf4j
 @AllArgsConstructor
 public class LocationService {
-    private final String LOCATION_ESSAY = "http://47.100.82.212:8070/location_essay";
-    private final String LOCATION_SECTION = "http://47.100.82.212:8070/location_section";
     private final HttpClient httpClient;
     private final ImageUtil imageUtil;
 
@@ -37,7 +35,7 @@ public class LocationService {
             BufferedImage image = imageUtil.decodeBase64Image(imageBase64);
             // 裁剪
             // 计算宽度、高度
-            double[] boxLocation = locationEssayResponse.getEssayBox().getLocation();
+            double[] boxLocation = locationEssayResponse.getEssayBox().getLocation()[0];
             int x1 = (int) (boxLocation[0]), y1 = (int) (boxLocation[1]);
             int x2 = (int) (boxLocation[2]), y2 = (int) (boxLocation[3]);
             image = imageUtil.cropImage(image, x1, y1, x2, y2);
@@ -77,8 +75,10 @@ public class LocationService {
      * @return
      */
     private LocationEssayResponse essayLocationBase64(String imageBase64) {
+        imageBase64 = imageBase64.replace("data:image/jpeg;base64,","");
         Map<String, Object> data = new HashMap<>();
         data.put("image_base64", imageBase64);
+        String LOCATION_ESSAY = "http://47.100.82.212:8070/location_essay";
         return httpClient.postForEntity(LOCATION_ESSAY, LocationEssayResponse.class, data);
     }
 
@@ -90,8 +90,10 @@ public class LocationService {
      * @return
      */
     private LocationSectionResponse sectionLocationBase64(String imageBase64) {
+        imageBase64 = imageBase64.replace("data:image/jpeg;base64,","");
         Map<String, Object> data = new HashMap<>();
         data.put("image_base64", imageBase64);
+        String LOCATION_SECTION = "http://47.100.82.212:8070/location_section";
         return httpClient.postForEntity(LOCATION_SECTION, LocationSectionResponse.class, data);
     }
 }
