@@ -69,7 +69,7 @@ public class BeeOcrUtil {
                     List<Integer> exclude = new ArrayList<>();
 
                     // 找出所有非手写区域，记录在exclude中
-                    // 根据ReserveType,选择exlcude中删去哪些
+                    // 根据ReserveType,选择exclude中删去哪些
                     String CharacterType = ReserveType.toLowerCase();
                     // handwriting 或 print
                     for (Map<String, Object> line : lines) {
