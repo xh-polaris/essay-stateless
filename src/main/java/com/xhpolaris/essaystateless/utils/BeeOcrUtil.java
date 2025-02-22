@@ -25,7 +25,7 @@ public class BeeOcrUtil {
     private final Environment env;
     private final ObjectMapper objectMapper;
 
-    public List<String> OcrAll(List<String> items, String type) throws Exception {
+    public List<String> OcrAll(List<String> items, String ImageType,String ReserveType) throws Exception {
         String beeOcrUrl = env.getProperty("bee.ocr");
         String secret = env.getProperty("bee.x-app-secret");
         String key = env.getProperty("bee.x-app-key");
@@ -43,9 +43,9 @@ public class BeeOcrUtil {
         try {
             for (String item : items) {
                 Map<String, String> body = new HashMap<>();
-                if (type.equals("base64"))
+                if (ImageType.equals("base64"))
                     body.put("image_base64", item);
-                else if (type.equals("url"))
+                else if (ImageType.equals("url"))
                     body.put("image_url", item);
                 HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
 
@@ -69,10 +69,17 @@ public class BeeOcrUtil {
                     List<Integer> exclude = new ArrayList<>();
 
                     // 找出所有非手写区域，记录在exclude中
+                    // 根据ReserveType,选择exlcude中删去哪些
+                    String CharacterType = ReserveType.toLowerCase();
+                    // handwriting 或 print
                     for (Map<String, Object> line : lines) {
-                        if ((int) line.get("handwritten") == 0) {
+                        if ((int) line.get(CharacterType) == 0) {
                             exclude.add((Integer) line.get("area_index"));
                         }
+                    }
+                    // 若参数为空，或为all，则保留所有文字
+                    if(CharacterType.isEmpty() || CharacterType.equals("all")){
+                        exclude.clear();
                     }
 
                     // 将所有手写区域拼接到result中

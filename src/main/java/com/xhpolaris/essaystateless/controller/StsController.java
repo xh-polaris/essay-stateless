@@ -18,7 +18,8 @@ public class StsController {
     @PostMapping("/ocr/bee/url")
     public BeeOcrResponse beeOcrUrl(@RequestBody BeeOcrRequest req) throws Exception {
         try {
-            return stsService.beeOcrUrl(req.getImages());
+            // 增加参数type
+            return stsService.beeOcrUrl(req.getImages(),req.getType());
         } catch (Exception e) {
             throw new Exception("Bee Ocr 调用失败");
         }
@@ -27,10 +28,9 @@ public class StsController {
     @PostMapping("/ocr/bee/base64")
     public BeeOcrResponse beeOcrBase64(@RequestBody BeeOcrRequest req) throws Exception {
         try {
-            return stsService.beeOcrBase64(req.getImages());
+            return stsService.beeOcrBase64(req.getImages(),req.getType());
         } catch (Exception e) {
             throw new Exception("Bee Ocr 调用失败");
         }
-
     }
 }
