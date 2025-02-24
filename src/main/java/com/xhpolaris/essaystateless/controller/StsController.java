@@ -89,7 +89,6 @@ public class StsController {
                 if(!EssayImages.isEmpty())
                     CroppedImages.add(EssayImages);
             }
-            log.info(String.valueOf(CroppedImages.size()));
             return stsService.beeOcrBase64(CroppedImages,req.getType());
         } catch (Exception e) {
             throw new Exception("Bee Ocr 调用失败");

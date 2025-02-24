@@ -74,10 +74,8 @@ public class BeeOcrUtil {
                     System.err.println("An error occurred: " + e.getMessage());
                 }
 
-                log.info(response.getBody());
                 // 处理识别逻辑
                 if (response.getStatusCode() == HttpStatus.OK) {
-                    // log.info("正常获取");
                     Map<String, Object> responseMap = objectMapper.readValue(response.getBody(), new TypeReference<>() {
                     });
                     if ((int) responseMap.get("code") != 0) {
@@ -91,12 +89,10 @@ public class BeeOcrUtil {
                     });
                     List<Integer> exclude = new ArrayList<>();
 
-                    // log.info("处理保留信息");
                     // 找出所有非手写区域，记录在exclude中
                     // 将保留类型ReserveType转换为全小写的CharacterType,进而选择exclude中记录哪些待删去文字
                     String CharacterType = ReserveType.toLowerCase();
                     // handwritten
-                    log.info(CharacterType);
                     switch(CharacterType){
                         case "handwritten":
                             for (Map<String, Object> line : lines) {
@@ -107,7 +103,7 @@ public class BeeOcrUtil {
                             break;
                         case "print":
                             for (Map<String, Object> line : lines) {
-                                if ((int) line.get("print") != 1) {
+                                if ((int) line.get("handwritten") == 1) {
                                     exclude.add((Integer) line.get("area_index"));
                                 }
                             }
@@ -116,7 +112,6 @@ public class BeeOcrUtil {
                     }
 
                     // 若参数为空，或为all，则保留所有文字
-                    log.info("areas"+areas.toString());
                     // 将所有手写区域拼接到result中
                     for (Map<String, Object> area : areas) {
                         // log.info();
@@ -128,8 +123,8 @@ public class BeeOcrUtil {
                         }
                     }
                 }
-                log.info("处理完成");
             }
+            log.info("处理完成");
         } catch (Exception e) {
             throw new Exception("ocr 识别失败");
         }
