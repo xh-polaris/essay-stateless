@@ -49,7 +49,7 @@ public class ImageUtil {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         ImageIO.write(image, "png", stream);
         String base64 = Base64.getEncoder().encodeToString(stream.toByteArray());
-        return "data:image/jpg;base64," + base64;
+        return base64;
     }
 
     /**

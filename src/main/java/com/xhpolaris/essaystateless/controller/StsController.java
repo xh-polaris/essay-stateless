@@ -8,11 +8,18 @@ import com.xhpolaris.essaystateless.entity.request.LocationRequest;
 import com.xhpolaris.essaystateless.service.LocationService;
 import com.xhpolaris.essaystateless.service.StsService;
 import lombok.AllArgsConstructor;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+@Slf4j
 @RestController
 @RequestMapping("/sts")
 @AllArgsConstructor
@@ -54,6 +61,38 @@ public class StsController {
             return locationService.sectionCropLocationBase64(req.getImageBase64());
         } catch (Exception e) {
             throw new Exception("作文段落定位 调用失败");
+        }
+    }
+
+    @PostMapping("/ocr/advanced/section/bee/base64")
+    public BeeOcrResponse beeOcrAdvancedSectionBase64(@RequestBody BeeOcrRequest req) throws Exception {
+        try {
+            List<String> images = req.getImages();
+            List<String> CroppedImages = new ArrayList<String>();
+            for(String image : images){
+                String[] SectionImages = locationService.sectionCropLocationBase64(image);
+                CroppedImages.addAll(Arrays.asList(SectionImages));
+            }
+            return stsService.beeOcrBase64(CroppedImages,req.getType());
+        } catch (Exception e) {
+            throw new Exception("Bee Ocr 调用失败");
+        }
+    }
+
+    @PostMapping("/ocr/advanced/essay/bee/base64")
+    public BeeOcrResponse beeOcrAdvancedEssayBase64(@RequestBody BeeOcrRequest req) throws Exception {
+        try {
+            List<String> images = req.getImages();
+            List<String> CroppedImages = new ArrayList<String>();
+            for(String image : images){
+                String EssayImages = locationService.essayCropLocationBase64(image);
+                if(!EssayImages.isEmpty())
+                    CroppedImages.add(EssayImages);
+            }
+            log.info(String.valueOf(CroppedImages.size()));
+            return stsService.beeOcrBase64(CroppedImages,req.getType());
+        } catch (Exception e) {
+            throw new Exception("Bee Ocr 调用失败");
         }
     }
 }

@@ -87,7 +87,7 @@ public class EvaluateService {
      */
     public EvaluationResponse betaOcrEvaluate(List<String> images, Integer grade) throws Exception {
         // 保留类型为全部
-        List<String> result = beeOcrUtil.OcrAll(images, "base64","");
+        List<String> result = beeOcrUtil.OcrAll(images, "base64");
         return evaluate(result.get(0), result.get(1), grade);
     }
 
