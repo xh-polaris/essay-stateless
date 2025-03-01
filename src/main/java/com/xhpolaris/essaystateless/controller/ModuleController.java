@@ -1,7 +1,9 @@
 package com.xhpolaris.essaystateless.controller;
 
+import com.xhpolaris.essaystateless.entity.enEvaluation.APIEnErrorResponse;
 import com.xhpolaris.essaystateless.entity.evaluation.api.*;
 import com.xhpolaris.essaystateless.entity.request.ModuleRequest;
+import com.xhpolaris.essaystateless.service.EnEvaluateService;
 import com.xhpolaris.essaystateless.service.EvaluateService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -67,4 +69,18 @@ public class ModuleController {
             throw new Exception("调用失败，请重试");
         return response;
     }
+
+    private final EnEvaluateService enEvaluateService;
+
+    /*
+     * 英语语法纠错
+     */
+    @PostMapping("/module/grammar/en")
+    public APIEnErrorResponse enGrammarEvaluate(@RequestBody ModuleRequest req) throws Exception {
+        APIEnErrorResponse response = enEvaluateService.enGrammarModuleEvaluate(req);
+        if (response == null)
+            throw new Exception("调用失败，请重试");
+        return response;
+    }
 }
+
