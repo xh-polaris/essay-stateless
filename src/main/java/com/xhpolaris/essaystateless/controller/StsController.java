@@ -1,6 +1,8 @@
 package com.xhpolaris.essaystateless.controller;
 
+import com.xhpolaris.essaystateless.entity.location.LocationEssayCropResponse;
 import com.xhpolaris.essaystateless.entity.location.LocationEssayResponse;
+import com.xhpolaris.essaystateless.entity.location.LocationSectionCropResponse;
 import com.xhpolaris.essaystateless.entity.location.LocationSectionResponse;
 import com.xhpolaris.essaystateless.entity.ocr.BeeOcrResponse;
 import com.xhpolaris.essaystateless.entity.request.BeeOcrRequest;
@@ -40,8 +42,7 @@ public class StsController {
     }
 
     @PostMapping("/location/crop/essay/base64")
-    public String essayLocationBase64(@RequestBody LocationRequest req) throws Exception {
-        // TODO:响应值封装
+    public LocationEssayCropResponse essayCropLocationBase64(@RequestBody LocationRequest req) throws Exception {
         try {
             return locationService.essayCropLocationBase64(req.getImageBase64());
         } catch (Exception e) {
@@ -54,7 +55,7 @@ public class StsController {
     }
 
     @PostMapping("/location/crop/section/base64")
-    public String[] sectionLocationBase64(@RequestBody LocationRequest req) throws Exception {
+    public LocationSectionCropResponse sectionCropLocationBase64(@RequestBody LocationRequest req) throws Exception {
         try {
             return locationService.sectionCropLocationBase64(req.getImageBase64());
         } catch (Exception e) {

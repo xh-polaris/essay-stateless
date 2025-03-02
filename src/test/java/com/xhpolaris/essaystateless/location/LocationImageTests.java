@@ -26,7 +26,7 @@ public class LocationImageTests {
     @Test
     public void testCropImage() throws IOException {
         String filePath = "src\\test\\java\\com\\xhpolaris\\essaystateless\\location\\image.txt";
-        BufferedImage image = imageUtil.decodeBase64Image(Files.readString(Paths.get(filePath)));
+        BufferedImage image = imageUtil.base64ToImage(Files.readString(Paths.get(filePath)));
 
         // 裁剪
         image = imageUtil.cropImage(image, 10,10, 1000, 1000);

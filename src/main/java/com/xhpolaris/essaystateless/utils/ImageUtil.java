@@ -30,7 +30,7 @@ public class ImageUtil {
      * @return
      * @throws IOException
      */
-    public BufferedImage decodeBase64Image(String imageBase64) throws IOException {
+    public BufferedImage base64ToImage(String imageBase64) throws IOException {
         // 去除base64前缀
         imageBase64 = imageBase64.substring(imageBase64.indexOf(",", 1) + 1);
         // 解码
@@ -45,7 +45,7 @@ public class ImageUtil {
      * @param image
      * @return
      */
-    public String encodeBase64Image(BufferedImage image) throws IOException {
+    public String imageToBase64(BufferedImage image) throws IOException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         ImageIO.write(image, "png", stream);
         String base64 = Base64.getEncoder().encodeToString(stream.toByteArray());

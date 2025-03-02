@@ -7,7 +7,9 @@
 
 package com.xhpolaris.essaystateless.service;
 
+import com.xhpolaris.essaystateless.entity.location.LocationEssayCropResponse;
 import com.xhpolaris.essaystateless.entity.location.LocationEssayResponse;
+import com.xhpolaris.essaystateless.entity.location.LocationSectionCropResponse;
 import com.xhpolaris.essaystateless.entity.location.LocationSectionResponse;
 import com.xhpolaris.essaystateless.utils.HttpClient;
 import com.xhpolaris.essaystateless.utils.ImageUtil;
@@ -27,12 +29,12 @@ public class LocationService {
     private final HttpClient httpClient;
     private final ImageUtil imageUtil;
 
-    public String essayCropLocationBase64(String imageBase64) {
+    public LocationEssayCropResponse essayCropLocationBase64(String imageBase64) {
         try {
             // 调用API
             LocationEssayResponse locationEssayResponse = essayLocationBase64(imageBase64);
             // 解码
-            BufferedImage image = imageUtil.decodeBase64Image(imageBase64);
+            BufferedImage image = imageUtil.base64ToImage(imageBase64);
             // 裁剪
             // 计算宽度、高度
             double[] boxLocation = locationEssayResponse.getEssayBox().getLocation()[0];
@@ -40,18 +42,18 @@ public class LocationService {
             int x2 = (int) (boxLocation[2]), y2 = (int) (boxLocation[3]);
             image = imageUtil.cropImage(image, x1, y1, x2, y2);
 
-            return imageUtil.encodeBase64Image(image);
+            return new LocationEssayCropResponse("200", "", imageUtil.imageToBase64(image));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String[] sectionCropLocationBase64(String imageBase64) {
+    public LocationSectionCropResponse sectionCropLocationBase64(String imageBase64) {
         try {
             // 调用API
             LocationSectionResponse locationSectionResponse = sectionLocationBase64(imageBase64);
             // 解码
-            BufferedImage image = imageUtil.decodeBase64Image(imageBase64);
+            BufferedImage image = imageUtil.base64ToImage(imageBase64);
             // 裁剪
             double[][] sectionBox = locationSectionResponse.getSectionBox();
             String[] result = new String[sectionBox.length];
@@ -60,9 +62,9 @@ public class LocationService {
                 int x1 = (int) (box[0]), y1 = (int) (box[1]);
                 int x2 = (int) (box[2]), y2 = (int) (box[3]);
                 image = imageUtil.cropImage(image, x1, y1, x2, y2);
-                result[index++] = imageUtil.encodeBase64Image(image);
+                result[index++] = imageUtil.imageToBase64(image);
             }
-            return result;
+            return new LocationSectionCropResponse("200", "", result);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -75,6 +77,7 @@ public class LocationService {
      * @return
      */
     public LocationEssayResponse essayLocationBase64(String imageBase64) {
+        imageBase64 = imageBase64.replace("data:image/jpeg;base64,", "");
         Map<String, Object> data = new HashMap<>();
         data.put("image_base64", imageBase64);
         String LOCATION_ESSAY = "http://47.100.82.212:8070/location_essay";
@@ -89,7 +92,7 @@ public class LocationService {
      * @return
      */
     public LocationSectionResponse sectionLocationBase64(String imageBase64) {
-        imageBase64 = imageBase64.replace("data:image/jpeg;base64,","");
+        imageBase64 = imageBase64.replace("data:image/jpeg;base64,", "");
         Map<String, Object> data = new HashMap<>();
         data.put("image_base64", imageBase64);
         String LOCATION_SECTION = "http://47.100.82.212:8070/location_section";
