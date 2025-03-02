@@ -39,10 +39,15 @@ public class StsController {
 
     @PostMapping("/location/crop/essay/base64")
     public String essayLocationBase64(@RequestBody LocationRequest req) throws Exception {
+        // TODO:响应值封装
         try {
             return locationService.essayCropLocationBase64(req.getImageBase64());
         } catch (Exception e) {
+            // TODO:异常处理
+            // 错误码、错误信息 code = 1000以上
+            // 返回错误信息响应值200
             throw new Exception("作文范围定位 调用失败");
+
         }
     }
 
