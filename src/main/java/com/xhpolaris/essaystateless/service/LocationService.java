@@ -42,7 +42,7 @@ public class LocationService {
             int x2 = (int) (boxLocation[2]), y2 = (int) (boxLocation[3]);
             image = imageUtil.cropImage(image, x1, y1, x2, y2);
 
-            return new LocationEssayCropResponse("200", "", imageUtil.imageToBase64(image));
+            return new LocationEssayCropResponse(200, "", imageUtil.imageToBase64(image));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -64,7 +64,7 @@ public class LocationService {
                 image = imageUtil.cropImage(image, x1, y1, x2, y2);
                 result[index++] = imageUtil.imageToBase64(image);
             }
-            return new LocationSectionCropResponse("200", "", result);
+            return new LocationSectionCropResponse(200, "", result);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
