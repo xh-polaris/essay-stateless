@@ -29,13 +29,11 @@ public enum CommonCode implements ResultCode {
 
     // Module相关错误码
     // 访问服务器错误
-    MODULE_SERVER_ERROR(false, 3001, "module 访问服务器失败");
+    MODULE_SERVER_ERROR(false, 3001, "module 访问服务器失败"),
 
     // Evaluate相关错误码
-
-
-
-    // Evaluate相关错误码
+    // 批改失败
+    EVALUATE_GRADE_ERROR(false, 4001, "批改失败，请重试");
 
     Boolean success;
     Integer code;
@@ -61,4 +59,4 @@ public enum CommonCode implements ResultCode {
     public String message() {
         return message;
     }
-    }
+}
