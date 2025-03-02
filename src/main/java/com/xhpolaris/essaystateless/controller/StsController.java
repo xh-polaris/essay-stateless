@@ -8,6 +8,7 @@ import com.xhpolaris.essaystateless.entity.ocr.BeeOcrResponse;
 import com.xhpolaris.essaystateless.entity.request.BeeOcrRequest;
 import com.xhpolaris.essaystateless.entity.request.LocationRequest;
 import com.xhpolaris.essaystateless.entity.result.ResponseResult;
+import com.xhpolaris.essaystateless.entity.resultCode.CommonCode;
 import com.xhpolaris.essaystateless.service.LocationService;
 import com.xhpolaris.essaystateless.service.StsService;
 import lombok.AllArgsConstructor;
@@ -24,18 +25,18 @@ public class StsController {
     private final LocationService locationService;
 
     @PostMapping("/ocr/bee/url")
-    public BeeOcrResponse beeOcrUrl(@RequestBody BeeOcrRequest req) throws Exception {
+    public ResponseResult<BeeOcrResponse> beeOcrUrl(@RequestBody BeeOcrRequest req) throws Exception {
         try {
-            return stsService.beeOcrUrl(req.getImages());
+            return new ResponseResult<>(CommonCode.SUCCESS, stsService.beeOcrUrl(req.getImages()));
         } catch (Exception e) {
             throw new Exception("Bee Ocr 调用失败");
         }
     }
 
     @PostMapping("/ocr/bee/base64")
-    public BeeOcrResponse beeOcrBase64(@RequestBody BeeOcrRequest req) throws Exception {
+    public ResponseResult<BeeOcrResponse> beeOcrBase64(@RequestBody BeeOcrRequest req) throws Exception {
         try {
-            return stsService.beeOcrBase64(req.getImages());
+            return new ResponseResult<>(CommonCode.SUCCESS, stsService.beeOcrBase64(req.getImages()));
         } catch (Exception e) {
             throw new Exception("Bee Ocr 调用失败");
         }
@@ -53,10 +54,11 @@ public class StsController {
 
     @PostMapping("/location/position/essay/base64")
     public ResponseResult<LocationEssayResponse> essayLocationBase64(@RequestBody LocationRequest req) throws Exception {
-       return locationService.essayLocationBase64(req.getImageBase64());
+        return locationService.essayLocationBase64(req.getImageBase64());
     }
 
     @PostMapping("/location/position/section/base64")
-    public ResponseResult<LocationSectionResponse> sectionLocationBase64(@RequestBody LocationRequest req) {return locationService.sectionLocationBase64(req.getImageBase64());
+    public ResponseResult<LocationSectionResponse> sectionLocationBase64(@RequestBody LocationRequest req) {
+        return locationService.sectionLocationBase64(req.getImageBase64());
     }
 }
