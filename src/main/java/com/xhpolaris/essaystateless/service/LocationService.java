@@ -74,8 +74,7 @@ public class LocationService {
      * @param imageBase64 图片的base64编码
      * @return
      */
-    private LocationEssayResponse essayLocationBase64(String imageBase64) {
-        imageBase64 = imageBase64.replace("data:image/jpeg;base64,","");
+    public LocationEssayResponse essayLocationBase64(String imageBase64) {
         Map<String, Object> data = new HashMap<>();
         data.put("image_base64", imageBase64);
         String LOCATION_ESSAY = "http://47.100.82.212:8070/location_essay";
@@ -89,7 +88,7 @@ public class LocationService {
      * @param imageBase64 图片的base64编码
      * @return
      */
-    private LocationSectionResponse sectionLocationBase64(String imageBase64) {
+    public LocationSectionResponse sectionLocationBase64(String imageBase64) {
         imageBase64 = imageBase64.replace("data:image/jpeg;base64,","");
         Map<String, Object> data = new HashMap<>();
         data.put("image_base64", imageBase64);
