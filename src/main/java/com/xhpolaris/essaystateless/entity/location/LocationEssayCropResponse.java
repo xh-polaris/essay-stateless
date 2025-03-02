@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class LocationEssayCropResponse {
-    private String code;
+    private Integer code;
     private String message;
     @JsonProperty("image_base64")
     private String imageBase64;
