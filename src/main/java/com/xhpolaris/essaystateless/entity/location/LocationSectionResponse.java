@@ -12,9 +12,6 @@ import lombok.Data;
 
 @Data
 public class LocationSectionResponse {
-    // 服务器返回的String类型code
-    private String code;
-    private String message;
     @JsonProperty("section_box")
     private double[][] sectionBox;
 }

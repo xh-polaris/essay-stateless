@@ -14,11 +14,8 @@ import lombok.Setter;
 
 @Data
 public class LocationEssayResponse {
-    // 服务器返回的String类型code
-    private String code;
     @JsonProperty("essay_box")
     private EssayBox essayBox;
-    private String message;
 
     @Getter
     @Setter

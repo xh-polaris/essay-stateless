@@ -2,6 +2,8 @@ package com.xhpolaris.essaystateless.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xhpolaris.essaystateless.entity.resultCode.CommonCode;
+import com.xhpolaris.essaystateless.exception.CustomizeException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -31,7 +33,7 @@ public class BeeOcrUtil {
         String key = env.getProperty("bee.x-app-key");
 
         if (beeOcrUrl == null) {
-            throw new Exception("ocr 配置错误");
+            throw new CustomizeException(CommonCode.BEE_OCR_CONFIG_ERROR);
         }
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -58,7 +60,7 @@ public class BeeOcrUtil {
                     Map<String, Object> responseMap = objectMapper.readValue(response.getBody(), new TypeReference<>() {
                     });
                     if ((int) responseMap.get("code") != 0) {
-                        throw new Exception("ocr 识别失败");
+                        throw new CustomizeException(CommonCode.BEE_OCR_IDENTIFY_ERROR);
                     }
                     Map<String, Object> data = objectMapper.convertValue(responseMap.get("data"), new TypeReference<Map<String, Object>>() {
                     });  // 获取响应中的数据部分
@@ -87,11 +89,11 @@ public class BeeOcrUtil {
                 }
             }
         } catch (Exception e) {
-            throw new Exception("ocr 识别失败");
+            throw new CustomizeException(CommonCode.BEE_OCR_IDENTIFY_ERROR);
         }
 
         if (result.isEmpty()) {
-            throw new Exception("ocr未识别到手写内容");
+            throw new CustomizeException(CommonCode.BEE_OCR_WRITTEN_NOT_IDENTIFY);
         }
 
         String title = result.get(0);
