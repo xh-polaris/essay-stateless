@@ -8,6 +8,7 @@ class EssayStatelessApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }

@@ -9,6 +9,7 @@ import com.xhpolaris.essaystateless.entity.scoreEvaluation.ScoreEvaluationRespon
 import com.xhpolaris.essaystateless.repository.RawLogsRepository;
 import com.xhpolaris.essaystateless.service.EvaluateService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;

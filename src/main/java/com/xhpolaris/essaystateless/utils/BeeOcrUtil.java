@@ -7,6 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -25,7 +28,7 @@ public class BeeOcrUtil {
     private final Environment env;
     private final ObjectMapper objectMapper;
 
-    public List<String> OcrAll(List<String> items, String type) throws Exception {
+    public List<String> OcrAll(List<String> items, String ImageType,String ReserveType) throws Exception {
         String beeOcrUrl = env.getProperty("bee.ocr");
         String secret = env.getProperty("bee.x-app-secret");
         String key = env.getProperty("bee.x-app-key");
@@ -43,16 +46,34 @@ public class BeeOcrUtil {
         try {
             for (String item : items) {
                 Map<String, String> body = new HashMap<>();
-                if (type.equals("base64"))
+                if (ImageType.equals("base64"))
                     body.put("image_base64", item);
-                else if (type.equals("url"))
+                else if (ImageType.equals("url"))
                     body.put("image_url", item);
                 HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
 
                 log.info("调用Bee-Ocr");
 
 
-                ResponseEntity<String> response = restTemplate.postForEntity(beeOcrUrl, request, String.class);
+                //ResponseEntity<String> response = restTemplate.postForEntity(beeOcrUrl, request, String.class);
+                ResponseEntity<String> response = null;
+                try {
+                    response = restTemplate.postForEntity(beeOcrUrl, request, String.class);
+                    // 这里可以添加成功后的处理逻辑
+                } catch (HttpClientErrorException e) {
+                    // 处理HttpClientErrorException，例如当HTTP状态码为4xx时
+                    System.err.println("Client error occurred: " + e.getStatusCode() + " " + e.getResponseBodyAsString());
+                } catch (HttpServerErrorException e) {
+                    // 处理HttpServerErrorException，例如当HTTP状态码为5xx时
+                    System.err.println("Server error occurred: " + e.getStatusCode() + " " + e.getResponseBodyAsString());
+                } catch (ResourceAccessException e) {
+                    // 处理网络访问异常，例如连接超时、资源不可用等
+                    System.err.println("Resource access error occurred: " + e.getMessage());
+                } catch (Exception e) {
+                    // 处理其他可能的异常
+                    System.err.println("An error occurred: " + e.getMessage());
+                }
+
                 // 处理识别逻辑
                 if (response.getStatusCode() == HttpStatus.OK) {
                     Map<String, Object> responseMap = objectMapper.readValue(response.getBody(), new TypeReference<>() {
@@ -69,14 +90,31 @@ public class BeeOcrUtil {
                     List<Integer> exclude = new ArrayList<>();
 
                     // 找出所有非手写区域，记录在exclude中
-                    for (Map<String, Object> line : lines) {
-                        if ((int) line.get("handwritten") == 0) {
-                            exclude.add((Integer) line.get("area_index"));
-                        }
+                    // 将保留类型ReserveType转换为全小写的CharacterType,进而选择exclude中记录哪些待删去文字
+                    String CharacterType = ReserveType.toLowerCase();
+                    // handwritten
+                    switch(CharacterType){
+                        case "handwritten":
+                            for (Map<String, Object> line : lines) {
+                                if ((int) line.get("handwritten") == 0) {
+                                    exclude.add((Integer) line.get("area_index"));
+                                }
+                            }
+                            break;
+                        case "print":
+                            for (Map<String, Object> line : lines) {
+                                if ((int) line.get("handwritten") == 1) {
+                                    exclude.add((Integer) line.get("area_index"));
+                                }
+                            }
+                        default:
+                            break;
                     }
 
+                    // 若参数为空，或为all，则保留所有文字
                     // 将所有手写区域拼接到result中
                     for (Map<String, Object> area : areas) {
+                        // log.info();
                         if (!exclude.contains((Integer) area.get("index"))) {
                             String text = (String) area.get("text");
                             if (!text.isEmpty()) {
@@ -86,6 +124,7 @@ public class BeeOcrUtil {
                     }
                 }
             }
+            log.info("处理完成");
         } catch (Exception e) {
             throw new Exception("ocr 识别失败");
         }
@@ -103,5 +142,11 @@ public class BeeOcrUtil {
         String text = sb.toString();
 
         return List.of(title, text);
+    }
+
+    // 定义两个参数的OcrAll方法
+    public List<String> OcrAll(List<String> items, String imageType) throws Exception{
+        // 调用三个参数的OcrAll方法，将ReserveType设置为空字符串
+        return OcrAll(items, imageType, "");
     }
 }

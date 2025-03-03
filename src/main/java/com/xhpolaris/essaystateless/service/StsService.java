@@ -16,15 +16,16 @@ import java.util.List;
 public class StsService {
     private final BeeOcrUtil beeOcrUtil;
 
-    public BeeOcrResponse beeOcrBase64(List<String> images) throws Exception {
-        List<String> result = beeOcrUtil.OcrAll(images, "base64");
+    public BeeOcrResponse beeOcrBase64(List<String> images,String ReserveType) throws Exception {
+        // 增加保留类型参数type
+        List<String> result = beeOcrUtil.OcrAll(images, "base64",ReserveType);
         BeeOcrResponse response = new BeeOcrResponse();
         response.content = result.get(0) + "\n" + result.get(1);
         return response;
     }
 
-    public BeeOcrResponse beeOcrUrl(List<String> images) throws Exception {
-        List<String> result = beeOcrUtil.OcrAll(images, "url");
+    public BeeOcrResponse beeOcrUrl(List<String> images,String ReserveType) throws Exception {
+        List<String> result = beeOcrUtil.OcrAll(images, "url",ReserveType);
         BeeOcrResponse response = new BeeOcrResponse();
         response.content = result.get(0) + "\n" + result.get(1);
         return response;
