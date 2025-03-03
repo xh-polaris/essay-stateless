@@ -11,9 +11,8 @@ import com.xhpolaris.essaystateless.entity.location.LocationEssayCropResponse;
 import com.xhpolaris.essaystateless.entity.location.LocationEssayResponse;
 import com.xhpolaris.essaystateless.entity.location.LocationSectionCropResponse;
 import com.xhpolaris.essaystateless.entity.location.LocationSectionResponse;
-import com.xhpolaris.essaystateless.entity.result.ResponseResult;
-import com.xhpolaris.essaystateless.entity.resultCode.CommonCode;
-import com.xhpolaris.essaystateless.exception.CustomizeException;
+import com.xhpolaris.essaystateless.exception.BizException;
+import com.xhpolaris.essaystateless.exception.ExceptionCode;
 import com.xhpolaris.essaystateless.utils.HttpClient;
 import com.xhpolaris.essaystateless.utils.ImageUtil;
 import lombok.AllArgsConstructor;
@@ -32,14 +31,14 @@ public class LocationService {
     private final HttpClient httpClient;
     private final ImageUtil imageUtil;
 
-    public ResponseResult<LocationEssayCropResponse> essayCropLocationBase64(String imageBase64) {
+    public LocationEssayCropResponse essayCropLocationBase64(String imageBase64) throws Exception {
         try {
             // 调用API
             LocationEssayResponse locationEssayResponse = postForLocationEssay(imageBase64);
             if (locationEssayResponse == null) {
-                throw new CustomizeException(CommonCode.LOCATION_UPLOAD_IMAGE_ERROR);
+                throw new BizException(ExceptionCode.LOCATION_UPLOAD_IMAGE_ERROR);
             } else if (locationEssayResponse.getEssayBox() == null) {
-                throw new CustomizeException(CommonCode.LOCATION_SERVER_ERROR);
+                throw new BizException(ExceptionCode.LOCATION_SERVER_ERROR);
             }
             // 解码
             BufferedImage image = imageUtil.base64ToImage(imageBase64);
@@ -50,20 +49,20 @@ public class LocationService {
             int x2 = (int) (boxLocation[2]), y2 = (int) (boxLocation[3]);
             image = imageUtil.cropImage(image, x1, y1, x2, y2);
 
-            return new ResponseResult<>(CommonCode.SUCCESS, new LocationEssayCropResponse(imageUtil.imageToBase64(image)));
+            return new LocationEssayCropResponse(imageUtil.imageToBase64(image));
         } catch (IOException e) {
-            throw new CustomizeException(CommonCode.LOCATION_IMAGE_DEAL_ERROR);
+            throw new BizException(ExceptionCode.LOCATION_IMAGE_DEAL_ERROR);
         }
     }
 
-    public ResponseResult<LocationSectionCropResponse> sectionCropLocationBase64(String imageBase64) {
+    public LocationSectionCropResponse sectionCropLocationBase64(String imageBase64) throws Exception {
         try {
             // 调用API
             LocationSectionResponse locationSectionResponse = postForLocationSection(imageBase64);
             if (locationSectionResponse == null) {
-                throw new CustomizeException(CommonCode.LOCATION_UPLOAD_IMAGE_ERROR);
+                throw new BizException(ExceptionCode.LOCATION_UPLOAD_IMAGE_ERROR);
             } else if (locationSectionResponse.getSectionBox() == null) {
-                throw new CustomizeException(CommonCode.LOCATION_SERVER_ERROR);
+                throw new BizException(ExceptionCode.LOCATION_SERVER_ERROR);
             }
             // 解码
             BufferedImage image = imageUtil.base64ToImage(imageBase64);
@@ -77,9 +76,9 @@ public class LocationService {
                 image = imageUtil.cropImage(image, x1, y1, x2, y2);
                 result[index++] = imageUtil.imageToBase64(image);
             }
-            return new ResponseResult<>(CommonCode.SUCCESS, new LocationSectionCropResponse(result));
+            return new LocationSectionCropResponse(result);
         } catch (IOException e) {
-            throw new CustomizeException(CommonCode.LOCATION_IMAGE_DEAL_ERROR);
+            throw new BizException(ExceptionCode.LOCATION_IMAGE_DEAL_ERROR);
         }
     }
 
@@ -89,14 +88,14 @@ public class LocationService {
      * @param imageBase64 图片的base64编码
      * @return
      */
-    public ResponseResult<LocationEssayResponse> essayLocationBase64(String imageBase64) {
+    public LocationEssayResponse essayLocationBase64(String imageBase64) throws Exception {
         LocationEssayResponse response = postForLocationEssay(imageBase64);
         if (response == null) {
-            throw new CustomizeException(CommonCode.LOCATION_UPLOAD_IMAGE_ERROR);
+            throw new BizException(ExceptionCode.LOCATION_UPLOAD_IMAGE_ERROR);
         } else if (response.getEssayBox() == null) {
-            throw new CustomizeException(CommonCode.LOCATION_SERVER_ERROR);
+            throw new BizException(ExceptionCode.LOCATION_SERVER_ERROR);
         }
-        return new ResponseResult<>(CommonCode.SUCCESS, response);
+        return response;
     }
 
     /**
@@ -105,14 +104,14 @@ public class LocationService {
      * @param imageBase64 图片的base64编码
      * @return
      */
-    public ResponseResult<LocationSectionResponse> sectionLocationBase64(String imageBase64) {
+    public LocationSectionResponse sectionLocationBase64(String imageBase64) throws Exception {
         LocationSectionResponse response = postForLocationSection(imageBase64);
         if (response == null) {
-            throw new CustomizeException(CommonCode.LOCATION_UPLOAD_IMAGE_ERROR);
+            throw new BizException(ExceptionCode.LOCATION_UPLOAD_IMAGE_ERROR);
         } else if (response.getSectionBox() == null) {
-            throw new CustomizeException(CommonCode.LOCATION_SERVER_ERROR);
+            throw new BizException(ExceptionCode.LOCATION_SERVER_ERROR);
         }
-        return new ResponseResult<>(CommonCode.SUCCESS, response);
+        return response;
     }
 
     private LocationEssayResponse postForLocationEssay(String imageBase64) {

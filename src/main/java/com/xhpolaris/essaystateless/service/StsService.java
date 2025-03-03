@@ -1,11 +1,7 @@
 package com.xhpolaris.essaystateless.service;
 
-import com.xhpolaris.essaystateless.entity.evaluation.EvaluationResponse;
 import com.xhpolaris.essaystateless.entity.ocr.BeeOcrResponse;
-import com.xhpolaris.essaystateless.entity.resultCode.CommonCode;
-import com.xhpolaris.essaystateless.exception.CustomizeException;
 import com.xhpolaris.essaystateless.utils.BeeOcrUtil;
-import com.xhpolaris.essaystateless.utils.HttpClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

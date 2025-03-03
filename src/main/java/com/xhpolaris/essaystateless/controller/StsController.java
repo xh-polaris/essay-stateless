@@ -7,8 +7,6 @@ import com.xhpolaris.essaystateless.entity.location.LocationSectionResponse;
 import com.xhpolaris.essaystateless.entity.ocr.BeeOcrResponse;
 import com.xhpolaris.essaystateless.entity.request.BeeOcrRequest;
 import com.xhpolaris.essaystateless.entity.request.LocationRequest;
-import com.xhpolaris.essaystateless.entity.result.ResponseResult;
-import com.xhpolaris.essaystateless.entity.resultCode.CommonCode;
 import com.xhpolaris.essaystateless.service.LocationService;
 import com.xhpolaris.essaystateless.service.StsService;
 import lombok.AllArgsConstructor;
@@ -25,40 +23,40 @@ public class StsController {
     private final LocationService locationService;
 
     @PostMapping("/ocr/bee/url")
-    public ResponseResult<BeeOcrResponse> beeOcrUrl(@RequestBody BeeOcrRequest req) throws Exception {
+    public BeeOcrResponse beeOcrUrl(@RequestBody BeeOcrRequest req) throws Exception {
         try {
-            return new ResponseResult<>(CommonCode.SUCCESS, stsService.beeOcrUrl(req.getImages()));
+            return stsService.beeOcrUrl(req.getImages());
         } catch (Exception e) {
             throw new Exception("Bee Ocr 调用失败");
         }
     }
 
     @PostMapping("/ocr/bee/base64")
-    public ResponseResult<BeeOcrResponse> beeOcrBase64(@RequestBody BeeOcrRequest req) throws Exception {
+    public BeeOcrResponse beeOcrBase64(@RequestBody BeeOcrRequest req) throws Exception {
         try {
-            return new ResponseResult<>(CommonCode.SUCCESS, stsService.beeOcrBase64(req.getImages()));
+            return stsService.beeOcrBase64(req.getImages());
         } catch (Exception e) {
             throw new Exception("Bee Ocr 调用失败");
         }
     }
 
     @PostMapping("/location/crop/essay/base64")
-    public ResponseResult<LocationEssayCropResponse> essayCropLocationBase64(@RequestBody LocationRequest req) {
+    public LocationEssayCropResponse essayCropLocationBase64(@RequestBody LocationRequest req) throws Exception {
         return locationService.essayCropLocationBase64(req.getImageBase64());
     }
 
     @PostMapping("/location/crop/section/base64")
-    public ResponseResult<LocationSectionCropResponse> sectionCropLocationBase64(@RequestBody LocationRequest req) {
+    public LocationSectionCropResponse sectionCropLocationBase64(@RequestBody LocationRequest req) throws Exception {
         return locationService.sectionCropLocationBase64(req.getImageBase64());
     }
 
     @PostMapping("/location/position/essay/base64")
-    public ResponseResult<LocationEssayResponse> essayLocationBase64(@RequestBody LocationRequest req) throws Exception {
+    public LocationEssayResponse essayLocationBase64(@RequestBody LocationRequest req) throws Exception {
         return locationService.essayLocationBase64(req.getImageBase64());
     }
 
     @PostMapping("/location/position/section/base64")
-    public ResponseResult<LocationSectionResponse> sectionLocationBase64(@RequestBody LocationRequest req) {
+    public LocationSectionResponse sectionLocationBase64(@RequestBody LocationRequest req) throws Exception {
         return locationService.sectionLocationBase64(req.getImageBase64());
     }
 }

@@ -5,9 +5,9 @@ import com.xhpolaris.essaystateless.entity.logs.RawLogs;
 import com.xhpolaris.essaystateless.entity.request.BetaOcrEvaluateRequest;
 import com.xhpolaris.essaystateless.entity.request.EvaluateRequest;
 import com.xhpolaris.essaystateless.entity.request.ScoreEvaluationRequest;
-import com.xhpolaris.essaystateless.entity.resultCode.CommonCode;
+import com.xhpolaris.essaystateless.exception.ExceptionCode;
 import com.xhpolaris.essaystateless.entity.scoreEvaluation.ScoreEvaluationResponse;
-import com.xhpolaris.essaystateless.exception.CustomizeException;
+import com.xhpolaris.essaystateless.exception.BizException;
 import com.xhpolaris.essaystateless.repository.RawLogsRepository;
 import com.xhpolaris.essaystateless.service.EvaluateService;
 import lombok.AllArgsConstructor;
@@ -30,7 +30,7 @@ public class EvaluateController {
     public EvaluationResponse evaluate(@RequestBody EvaluateRequest req) throws Exception {
         EvaluationResponse response = evaluateService.evaluate(req.title, req.content, req.grade);
         if (response == null) {
-            throw new CustomizeException(CommonCode.EVALUATE_GRADE_ERROR);
+            throw new BizException(ExceptionCode.EVALUATE_GRADE_ERROR);
         }
         saveLogs("/evaluate/", req, response);
         return response;
@@ -43,7 +43,7 @@ public class EvaluateController {
     public EvaluationResponse betaOcrEvaluate(@RequestBody BetaOcrEvaluateRequest req) throws Exception {
         EvaluationResponse response = evaluateService.betaOcrEvaluate(req.getImages(), req.getGrade());
         if (response == null) {
-            throw new CustomizeException(CommonCode.EVALUATE_GRADE_ERROR);
+            throw new BizException(ExceptionCode.EVALUATE_GRADE_ERROR);
         }
         saveLogs("/evaluate/beta/ocr", req, response);
         return response;
@@ -56,7 +56,7 @@ public class EvaluateController {
     public ScoreEvaluationResponse scoreEvaluate(@RequestBody ScoreEvaluationRequest req) throws Exception {
         ScoreEvaluationResponse response = evaluateService.evaluateScore(req);
         if (response == null)
-            throw new CustomizeException(CommonCode.EVALUATE_GRADE_ERROR);
+            throw new BizException(ExceptionCode.EVALUATE_GRADE_ERROR);
         saveLogs("/evaluate/score", req, response);
         return response;
     }

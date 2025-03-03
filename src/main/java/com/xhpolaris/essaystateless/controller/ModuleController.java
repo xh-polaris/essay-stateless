@@ -2,8 +2,8 @@ package com.xhpolaris.essaystateless.controller;
 
 import com.xhpolaris.essaystateless.entity.evaluation.api.*;
 import com.xhpolaris.essaystateless.entity.request.ModuleRequest;
-import com.xhpolaris.essaystateless.entity.resultCode.CommonCode;
-import com.xhpolaris.essaystateless.exception.CustomizeException;
+import com.xhpolaris.essaystateless.exception.ExceptionCode;
+import com.xhpolaris.essaystateless.exception.BizException;
 import com.xhpolaris.essaystateless.service.EvaluateService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ public class ModuleController {
     public APICommonResponse overallEvaluate(@RequestBody ModuleRequest req, @PathVariable String type) throws Exception {
         APICommonResponse response = evaluateService.commonModuleEvaluate(req, type);
         if (response == null)
-            throw new CustomizeException(CommonCode.MODULE_SERVER_ERROR);
+            throw new BizException(ExceptionCode.MODULE_SERVER_ERROR);
         return response;
     }
 
@@ -33,7 +33,7 @@ public class ModuleController {
     public APIFluencyResponse fluencyEvaluate(@RequestBody ModuleRequest req) throws Exception {
         APIFluencyResponse response = evaluateService.fluencyModuleEvaluate(req);
         if (response == null)
-            throw new CustomizeException(CommonCode.MODULE_SERVER_ERROR);
+            throw new BizException(ExceptionCode.MODULE_SERVER_ERROR);
         return response;
     }
 
@@ -44,7 +44,7 @@ public class ModuleController {
     public APIWordSentenceResponse wordSentenceEvaluate(@RequestBody ModuleRequest req) throws Exception {
         APIWordSentenceResponse response = evaluateService.wordSentenceModuleEvaluate(req);
         if (response == null)
-            throw new CustomizeException(CommonCode.MODULE_SERVER_ERROR);
+            throw new BizException(ExceptionCode.MODULE_SERVER_ERROR);
         return response;
     }
 
@@ -55,7 +55,7 @@ public class ModuleController {
     public APIBadWordResponse badWordEvaluate(@RequestBody ModuleRequest req) throws Exception {
         APIBadWordResponse response = evaluateService.badWordModuleEvaluate(req);
         if (response == null)
-            throw new CustomizeException(CommonCode.MODULE_SERVER_ERROR);
+            throw new BizException(ExceptionCode.MODULE_SERVER_ERROR);
         return response;
     }
 
@@ -66,7 +66,7 @@ public class ModuleController {
     public APIExpressionResponse expressionEvaluate(@RequestBody ModuleRequest req) throws Exception {
         APIExpressionResponse response = evaluateService.expressionModuleEvaluate(req);
         if (response == null)
-            throw new CustomizeException(CommonCode.MODULE_SERVER_ERROR);
+            throw new BizException(ExceptionCode.MODULE_SERVER_ERROR);
         return response;
     }
 }

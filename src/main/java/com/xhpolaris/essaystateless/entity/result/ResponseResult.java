@@ -8,7 +8,8 @@
 package com.xhpolaris.essaystateless.entity.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.xhpolaris.essaystateless.entity.resultCode.ResultCode;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.xhpolaris.essaystateless.exception.ExceptionCode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,21 +18,19 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseResult<T> {
 
-    Boolean success = true;
-    Integer code = 200;
+    Integer code = 0;
     String message;
+    @JsonUnwrapped
     T data;
 
-    public ResponseResult(ResultCode resultCode) {
-        this.success = resultCode.success();
-        this.code = resultCode.code();
-        this.message = resultCode.message();
+    public ResponseResult(ExceptionCode exceptionCode) {
+        this.code = exceptionCode.code();
+        this.message = exceptionCode.message();
     }
 
-    public ResponseResult(ResultCode resultCode,T t) {
-        this.success = resultCode.success();
-        this.code = resultCode.code();
-        this.message = resultCode.message();
+    public ResponseResult(ExceptionCode exceptionCode, T t) {
+        this.code = exceptionCode.code();
+        this.message = exceptionCode.message();
         this.data = t;
     }
 }
