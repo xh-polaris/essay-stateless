@@ -5,6 +5,7 @@ import com.xhpolaris.essaystateless.entity.logs.RawLogs;
 import com.xhpolaris.essaystateless.entity.request.BetaOcrEvaluateRequest;
 import com.xhpolaris.essaystateless.entity.request.EvaluateRequest;
 import com.xhpolaris.essaystateless.entity.request.ScoreEvaluationRequest;
+import com.xhpolaris.essaystateless.entity.result.ResponseResult;
 import com.xhpolaris.essaystateless.exception.ExceptionCode;
 import com.xhpolaris.essaystateless.entity.scoreEvaluation.ScoreEvaluationResponse;
 import com.xhpolaris.essaystateless.exception.BizException;
@@ -27,38 +28,38 @@ public class EvaluateController {
      * beta版批改(学校)
      */
     @PostMapping
-    public EvaluationResponse evaluate(@RequestBody EvaluateRequest req) throws Exception {
+    public ResponseResult<EvaluationResponse> evaluate(@RequestBody EvaluateRequest req) throws Exception {
         EvaluationResponse response = evaluateService.evaluate(req.title, req.content, req.grade);
         if (response == null) {
             throw new BizException(ExceptionCode.EVALUATE_GRADE_ERROR);
         }
         saveLogs("/evaluate/", req, response);
-        return response;
+        return new ResponseResult<>(ExceptionCode.SUCCESS, response);
     }
 
     /*
      * beta版ocr批改
      */
     @PostMapping("/beta/ocr")
-    public EvaluationResponse betaOcrEvaluate(@RequestBody BetaOcrEvaluateRequest req) throws Exception {
+    public ResponseResult<EvaluationResponse> betaOcrEvaluate(@RequestBody BetaOcrEvaluateRequest req) throws Exception {
         EvaluationResponse response = evaluateService.betaOcrEvaluate(req.getImages(), req.getGrade());
         if (response == null) {
             throw new BizException(ExceptionCode.EVALUATE_GRADE_ERROR);
         }
         saveLogs("/evaluate/beta/ocr", req, response);
-        return response;
+        return new ResponseResult<>(ExceptionCode.SUCCESS, response);
     }
 
     /*
      * score版接口(微软)
      */
     @PostMapping("/score")
-    public ScoreEvaluationResponse scoreEvaluate(@RequestBody ScoreEvaluationRequest req) throws Exception {
+    public ResponseResult<ScoreEvaluationResponse> scoreEvaluate(@RequestBody ScoreEvaluationRequest req) throws Exception {
         ScoreEvaluationResponse response = evaluateService.evaluateScore(req);
         if (response == null)
             throw new BizException(ExceptionCode.EVALUATE_GRADE_ERROR);
         saveLogs("/evaluate/score", req, response);
-        return response;
+        return new ResponseResult<>(ExceptionCode.SUCCESS, response);
     }
 
     private void saveLogs(String uri, Object req, Object resp) {

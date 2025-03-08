@@ -7,6 +7,9 @@ import com.xhpolaris.essaystateless.entity.location.LocationSectionResponse;
 import com.xhpolaris.essaystateless.entity.ocr.BeeOcrResponse;
 import com.xhpolaris.essaystateless.entity.request.BeeOcrRequest;
 import com.xhpolaris.essaystateless.entity.request.LocationRequest;
+import com.xhpolaris.essaystateless.entity.result.ResponseResult;
+import com.xhpolaris.essaystateless.exception.BizException;
+import com.xhpolaris.essaystateless.exception.ExceptionCode;
 import com.xhpolaris.essaystateless.service.LocationService;
 import com.xhpolaris.essaystateless.service.StsService;
 import lombok.AllArgsConstructor;
@@ -23,40 +26,56 @@ public class StsController {
     private final LocationService locationService;
 
     @PostMapping("/ocr/bee/url")
-    public BeeOcrResponse beeOcrUrl(@RequestBody BeeOcrRequest req) throws Exception {
-        try {
-            return stsService.beeOcrUrl(req.getImages());
-        } catch (Exception e) {
-            throw new Exception("Bee Ocr 调用失败");
+    public ResponseResult<BeeOcrResponse> beeOcrUrl(@RequestBody BeeOcrRequest req) throws Exception {
+        BeeOcrResponse response = stsService.beeOcrUrl(req.getImages());
+        if (response == null) {
+            throw new BizException(ExceptionCode.BEE_OCR_IDENTIFY_ERROR);
         }
+        return new ResponseResult<>(ExceptionCode.SUCCESS, response);
     }
 
     @PostMapping("/ocr/bee/base64")
-    public BeeOcrResponse beeOcrBase64(@RequestBody BeeOcrRequest req) throws Exception {
-        try {
-            return stsService.beeOcrBase64(req.getImages());
-        } catch (Exception e) {
-            throw new Exception("Bee Ocr 调用失败");
+    public ResponseResult<BeeOcrResponse> beeOcrBase64(@RequestBody BeeOcrRequest req) throws Exception {
+        BeeOcrResponse response = stsService.beeOcrBase64(req.getImages());
+        if (response == null) {
+            throw new BizException(ExceptionCode.LOCATION_SERVER_ERROR);
         }
+        return new ResponseResult<>(ExceptionCode.SUCCESS, response);
     }
 
     @PostMapping("/location/crop/essay/base64")
-    public LocationEssayCropResponse essayCropLocationBase64(@RequestBody LocationRequest req) throws Exception {
-        return locationService.essayCropLocationBase64(req.getImageBase64());
+    public ResponseResult<LocationEssayCropResponse> essayCropLocationBase64(@RequestBody LocationRequest req) throws Exception {
+        LocationEssayCropResponse response = locationService.essayCropLocationBase64(req.getImageBase64());
+        if (response == null) {
+            throw new BizException(ExceptionCode.LOCATION_SERVER_ERROR);
+        }
+        return new ResponseResult<>(ExceptionCode.SUCCESS, response);
     }
 
     @PostMapping("/location/crop/section/base64")
-    public LocationSectionCropResponse sectionCropLocationBase64(@RequestBody LocationRequest req) throws Exception {
-        return locationService.sectionCropLocationBase64(req.getImageBase64());
+    public ResponseResult<LocationSectionCropResponse> sectionCropLocationBase64(@RequestBody LocationRequest req) throws Exception {
+        LocationSectionCropResponse response = locationService.sectionCropLocationBase64(req.getImageBase64());
+        if (response == null) {
+            throw new BizException(ExceptionCode.LOCATION_SERVER_ERROR);
+        }
+        return new ResponseResult<>(ExceptionCode.SUCCESS, response);
     }
 
     @PostMapping("/location/position/essay/base64")
-    public LocationEssayResponse essayLocationBase64(@RequestBody LocationRequest req) throws Exception {
-        return locationService.essayLocationBase64(req.getImageBase64());
+    public ResponseResult<LocationEssayResponse> essayLocationBase64(@RequestBody LocationRequest req) throws Exception {
+        LocationEssayResponse response = locationService.essayLocationBase64(req.getImageBase64());
+        if (response == null) {
+            throw new BizException(ExceptionCode.LOCATION_SERVER_ERROR);
+        }
+        return new ResponseResult<>(ExceptionCode.SUCCESS, response);
     }
 
     @PostMapping("/location/position/section/base64")
-    public LocationSectionResponse sectionLocationBase64(@RequestBody LocationRequest req) throws Exception {
-        return locationService.sectionLocationBase64(req.getImageBase64());
+    public ResponseResult<LocationSectionResponse> sectionLocationBase64(@RequestBody LocationRequest req) throws Exception {
+        LocationSectionResponse response = locationService.sectionLocationBase64(req.getImageBase64());
+        if (response == null) {
+            throw new BizException(ExceptionCode.LOCATION_SERVER_ERROR);
+        }
+        return new ResponseResult<>(ExceptionCode.SUCCESS, response);
     }
 }
