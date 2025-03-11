@@ -26,8 +26,8 @@ public class ResponseHandler {
                 int sentenceStart = currentPosition; // 句子的起始位置
                 int sentenceEnd = currentPosition + sentence.length(); // 句子的结束位置
 
-                if (sentenceStart <= index && index < sentenceEnd) {
-                    int relativeIndex = index - sentenceStart; // 计算相对索引
+                if (sentenceStart <= index - paragraphIndex && index - paragraphIndex < sentenceEnd) {
+                    int relativeIndex = index - paragraphIndex - sentenceStart; // 语法错误出现的位置相对于所遍历的该句子的偏移量
                     //relativeIndex -= paragraphIndex;  // 修正下游算法不考虑/n带来的误差
                     return new GrammarPosition(paragraphIndex, sentenceIndex, relativeIndex);
                 }
