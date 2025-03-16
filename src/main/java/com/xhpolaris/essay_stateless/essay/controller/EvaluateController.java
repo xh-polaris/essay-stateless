@@ -1,11 +1,11 @@
 package com.xhpolaris.essay_stateless.essay.controller;
 
-import com.xhpolaris.essay_stateless.entity.evaluation.EvaluationResponse;
-import com.xhpolaris.essay_stateless.entity.logs.RawLogs;
-import com.xhpolaris.essay_stateless.entity.request.BetaOcrEvaluateRequest;
-import com.xhpolaris.essay_stateless.entity.request.EvaluateRequest;
-import com.xhpolaris.essay_stateless.entity.request.ScoreEvaluationRequest;
-import com.xhpolaris.essay_stateless.entity.scoreEvaluation.ScoreEvaluationResponse;
+import com.xhpolaris.essay_stateless.essay.entity.evaluation.EvaluationResponse;
+import com.xhpolaris.essay_stateless.essay.entity.logs.RawLogs;
+import com.xhpolaris.essay_stateless.essay.req.BetaOcrEvaluateRequest;
+import com.xhpolaris.essay_stateless.essay.req.EvaluateRequest;
+import com.xhpolaris.essay_stateless.essay.req.ScoreEvaluationRequest;
+import com.xhpolaris.essay_stateless.essay.entity.scoreEvaluation.ScoreEvaluationResponse;
 import com.xhpolaris.essay_stateless.essay.repository.RawLogsRepository;
 import com.xhpolaris.essay_stateless.essay.core.EvaluateService;
 import lombok.AllArgsConstructor;

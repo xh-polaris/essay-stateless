@@ -1,12 +1,12 @@
 package com.xhpolaris.essay_stateless.essay.core;
 
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
-import com.xhpolaris.essay_stateless.entity.evaluation.EvaluationResponse;
-import com.xhpolaris.essay_stateless.entity.evaluation.api.*;
-import com.xhpolaris.essay_stateless.entity.evaluation.fields.ModelVersion;
-import com.xhpolaris.essay_stateless.entity.request.ModuleRequest;
-import com.xhpolaris.essay_stateless.entity.request.ScoreEvaluationRequest;
-import com.xhpolaris.essay_stateless.entity.scoreEvaluation.ScoreEvaluationResponse;
+import com.xhpolaris.essay_stateless.essay.entity.evaluation.EvaluationResponse;
+import com.xhpolaris.essay_stateless.essay.entity.evaluation.api.*;
+import com.xhpolaris.essay_stateless.essay.entity.evaluation.fields.ModelVersion;
+import com.xhpolaris.essay_stateless.essay.req.ModuleRequest;
+import com.xhpolaris.essay_stateless.essay.req.ScoreEvaluationRequest;
+import com.xhpolaris.essay_stateless.essay.entity.scoreEvaluation.ScoreEvaluationResponse;
 import com.xhpolaris.essay_stateless.ocr.util.BeeOcrUtil;
 import com.xhpolaris.essay_stateless.utils.HttpClient;
 import lombok.AllArgsConstructor;

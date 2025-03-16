@@ -1,4 +1,4 @@
-package com.xhpolaris.essay_stateless.entity.evaluation.api;
+package com.xhpolaris.essay_stateless.essay.entity.evaluation.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

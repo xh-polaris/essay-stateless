@@ -1,4 +1,4 @@
-package com.xhpolaris.essay_stateless.entity.logs;
+package com.xhpolaris.essay_stateless.essay.entity.logs;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

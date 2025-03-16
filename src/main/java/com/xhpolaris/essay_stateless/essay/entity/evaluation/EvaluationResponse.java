@@ -1,9 +1,10 @@
-package com.xhpolaris.essay_stateless.entity.evaluation;
+package com.xhpolaris.essay_stateless.essay.entity.evaluation;
 
 import com.xhpolaris.essay_stateless.entity.evaluation.api.*;
-import com.xhpolaris.essay_stateless.entity.evaluation.fields.ModelVersion;
-import com.xhpolaris.essay_stateless.entity.evaluation.fields.ParagraphEvaluation;
-import com.xhpolaris.essay_stateless.entity.evaluation.fields.WordSentenceEvaluation;
+import com.xhpolaris.essay_stateless.essay.entity.evaluation.api.*;
+import com.xhpolaris.essay_stateless.essay.entity.evaluation.fields.ModelVersion;
+import com.xhpolaris.essay_stateless.essay.entity.evaluation.fields.ParagraphEvaluation;
+import com.xhpolaris.essay_stateless.essay.entity.evaluation.fields.WordSentenceEvaluation;
 import com.xhpolaris.essay_stateless.essay.util.ResponseHandler;
 import lombok.Data;
 

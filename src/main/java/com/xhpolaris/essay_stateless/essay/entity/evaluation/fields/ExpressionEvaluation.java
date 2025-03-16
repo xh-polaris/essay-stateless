@@ -1,4 +1,4 @@
-package com.xhpolaris.essay_stateless.entity.evaluation.fields;
+package com.xhpolaris.essay_stateless.essay.entity.evaluation.fields;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

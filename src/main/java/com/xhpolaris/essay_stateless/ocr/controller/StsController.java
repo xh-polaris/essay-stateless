@@ -1,7 +1,7 @@
 package com.xhpolaris.essay_stateless.ocr.controller;
 
 import com.xhpolaris.essay_stateless.ocr.entity.BeeOcrResponse;
-import com.xhpolaris.essay_stateless.entity.request.BeeOcrRequest;
+import com.xhpolaris.essay_stateless.ocr.req.BeeOcrRequest;
 import com.xhpolaris.essay_stateless.ocr.core.StsService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
