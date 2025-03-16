@@ -1,7 +1,7 @@
 package com.xhpolaris.essay_stateless.essay.entity.evaluation;
 
-import com.xhpolaris.essay_stateless.entity.evaluation.fields.*;
 import com.xhpolaris.essay_stateless.essay.entity.evaluation.fields.*;
+
 import lombok.Data;
 
 import java.util.ArrayList;

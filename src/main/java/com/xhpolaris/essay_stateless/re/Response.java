@@ -23,28 +23,8 @@ public class Response {
     Object data;
 
     // 默认成功
-    public Response Succeed(Object data) {
+    public static Response Succeed(Object data) {
         return new Response(0, "success", data);
-    }
-
-    // 未知系统异常
-    public static Response FailedSysUn() {
-        return Failed(new BizException(ECode.SYS_UNKNOWN));
-    }
-
-    // 未知系统异常 - 有消息
-    public static Response FailedSysUn(String msg) {
-        return Failed(new BizException(ECode.SYS_UNKNOWN, msg));
-    }
-
-    // 未知业务异常
-    public static Response FailedBizUn() {
-        return Failed(new BizException(ECode.BIZ_UNKNOWN));
-    }
-
-    // 未知业务异常 - 有消息
-    public static Response FailedBizUn(String msg) {
-        return Failed(new BizException(ECode.BIZ_UNKNOWN, msg));
     }
 
     // 业务异常 失败
@@ -54,6 +34,6 @@ public class Response {
 
     // 其他异常 失败
     public static Response Failed(Exception e) {
-        return FailedSysUn(e.getMessage());
+        return Failed(new BizException(ECode.SYS_UNKNOWN, e.getMessage()));
     }
 }

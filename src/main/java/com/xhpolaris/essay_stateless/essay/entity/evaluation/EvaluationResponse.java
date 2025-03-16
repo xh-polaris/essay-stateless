@@ -2,6 +2,7 @@ package com.xhpolaris.essay_stateless.essay.entity.evaluation;
 
 import com.xhpolaris.essay_stateless.entity.evaluation.api.*;
 import com.xhpolaris.essay_stateless.essay.entity.evaluation.api.*;
+import com.xhpolaris.essay_stateless.evaluation.api.*;
 import com.xhpolaris.essay_stateless.essay.entity.evaluation.fields.ModelVersion;
 import com.xhpolaris.essay_stateless.essay.entity.evaluation.fields.ParagraphEvaluation;
 import com.xhpolaris.essay_stateless.essay.entity.evaluation.fields.WordSentenceEvaluation;

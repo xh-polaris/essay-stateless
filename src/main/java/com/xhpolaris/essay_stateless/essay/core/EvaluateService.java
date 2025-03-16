@@ -50,6 +50,8 @@ public class EvaluateService {
 
         long start = System.currentTimeMillis();
 
+        // TODO essay部分需要用config获取url
+
         // 异步调用多个评估api，参数依次是url，返回的类型，文章内容map
         CompletableFuture<APICommonResponse> overall = httpClient.asyncCall("overall", APICommonResponse.class, essay);
         CompletableFuture<APIFluencyResponse> fluency = httpClient.asyncCall("fluency", APIFluencyResponse.class, essay);

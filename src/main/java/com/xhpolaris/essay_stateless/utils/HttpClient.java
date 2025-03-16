@@ -3,10 +3,7 @@ package com.xhpolaris.essay_stateless.utils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -19,37 +16,33 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class HttpClient {
 
-    private final Environment env;
-
-    public <T> T postForEntity(String url, java.lang.Class<T> responseType, Map<String, Object> body) throws RestClientException {
+    public <T> T postForEntity(String url, java.lang.Class<T> responseType, Map<String, Object> body, Map<String, String> header) throws RestClientException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 
-        log.info("向 {}发送请求", url);
+        if (header != null) {
+            header.forEach(headers::add);
+        }
 
         ResponseEntity<T> response;
         try {
             response = restTemplate.postForEntity(url, request, responseType);
             return response.getBody();
         } catch (Exception e) {
-            e.printStackTrace();
-            log.info("出错url {}", url);
+            log.info("出错url {}; 出错原因 {}", url, e.getMessage());
             return null;
         }
     }
 
-    public String getURL(String url) {
-        return env.getProperty("api." + url);
+    // 异步调用接口
+    public <T> CompletableFuture<T> asyncCall(String url, Class<T> responseClass, Map<String, Object> body, Map<String, String> header) {
+        return CompletableFuture.supplyAsync(() -> this.postForEntity(url, responseClass, body, header));
     }
 
-    public <T> CompletableFuture<T> asyncCall(String url, Class<T> responseClass, Map<String, Object> body) {
-        return CompletableFuture.supplyAsync(() -> this.postForEntity(
-                this.getURL(url), responseClass, body));
-    }
-
-    public <T> T syncCall(String url, Class<T> responseClass, Map<String, Object> body) {
-        return this.postForEntity(this.getURL(url), responseClass, body);
+    // 同步调用接口卡
+    public <T> T syncCall(String url, Class<T> responseClass, Map<String, Object> body, Map<String, String> header) {
+        return this.postForEntity(url, responseClass, body, header);
     }
 }

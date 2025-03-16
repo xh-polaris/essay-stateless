@@ -1,4 +1,4 @@
-package com.xhpolaris.essay_stateless.ocr.entity;
+package com.xhpolaris.essay_stateless.ocr.resp;
 
 import lombok.Data;
 
