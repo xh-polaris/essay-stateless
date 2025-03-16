@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 @Slf4j
 public class OcrCore {
+    private final OcrProviderFactory factory;
+
     /**
      * 默认的ocr识别，只获得识别的文本结果
      *
@@ -28,7 +30,7 @@ public class OcrCore {
     public DefaultOcrResponse defaultOcr(String provider, String imgType, DefaultOcrRequest req) throws Exception {
 
         // 根据provider从工厂类中获取具体的Ocr处理类
-        OcrProvider _provider = OcrProviderFactory.getOcrProvider(provider);
+        OcrProvider _provider = factory.getOcrProvider(provider);
 
         // 识别ocr结果
         return _provider.ocr(imgType, req);

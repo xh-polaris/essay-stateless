@@ -27,22 +27,22 @@ public class BizException extends Exception {
 
     // 未知系统异常
     public static BizException FailedSysUn() {
-        return Failed(new BizException(ECode.SYS_UNKNOWN));
+        return new BizException(ECode.SYS_UNKNOWN);
     }
 
     // 未知系统异常 - 有消息
     public static BizException FailedSysUn(String msg) {
-        return Failed(new BizException(ECode.SYS_UNKNOWN, msg));
+        return new BizException(ECode.SYS_UNKNOWN, msg);
     }
 
     // 未知业务异常
     public static BizException FailedBizUn() {
-        return Failed(new BizException(ECode.BIZ_UNKNOWN));
+        return new BizException(ECode.BIZ_UNKNOWN);
     }
 
     // 未知业务异常 - 有消息
     public static BizException FailedBizUn(String msg) {
-        return Failed(new BizException(ECode.BIZ_UNKNOWN, msg));
+        return new BizException(ECode.BIZ_UNKNOWN, msg);
     }
 
     // 业务异常 失败

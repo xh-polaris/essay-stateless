@@ -2,11 +2,11 @@ package com.xhpolaris.essay_stateless.ocr.core.provider;
 
 import com.xhpolaris.essay_stateless.exception.BizException;
 import com.xhpolaris.essay_stateless.exception.ECode;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class OcrProviderFactory {
 
     // 蜜蜂家校Ocr

@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Response> handle(Exception e) {
         // 用户友好的业务异常
-        if (e instanceof BizException be && be.getCode() > 1000 )  {
+        if (e instanceof BizException be && be.getCode() > 1000) {
             log.info("biz error: {}", e.getMessage());
             return ResponseEntity.ok(Response.Failed(be));
         }
