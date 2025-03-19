@@ -1,4 +1,4 @@
-package com.xhpolaris.essay_stateless.essay.entity.scoreEvaluation;
+package com.xhpolaris.essay_stateless.essay.core.score;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

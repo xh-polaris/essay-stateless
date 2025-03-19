@@ -1,6 +1,6 @@
 package com.xhpolaris.essay_stateless.essay.controller;
 
-import com.xhpolaris.essay_stateless.essay.entity.evaluation.api.*;
+import com.xhpolaris.essay_stateless.essay.core.beta.api.*;
 import com.xhpolaris.essay_stateless.essay.req.ModuleRequest;
 import com.xhpolaris.essay_stateless.essay.core.EvaluateService;
 import lombok.AllArgsConstructor;
@@ -39,19 +39,8 @@ public class ModuleController {
      * 好词好句
      */
     @PostMapping("/word_sentence")
-    public APIWordSentenceResponse wordSentenceEvaluate(@RequestBody ModuleRequest req) throws Exception {
-        APIWordSentenceResponse response = evaluateService.wordSentenceModuleEvaluate(req);
-        if (response == null)
-            throw new Exception("调用失败，请重试");
-        return response;
-    }
-
-    /*
-     * 文本检错
-     */
-    @PostMapping("/cgec")
-    public APIBadWordResponse badWordEvaluate(@RequestBody ModuleRequest req) throws Exception {
-        APIBadWordResponse response = evaluateService.badWordModuleEvaluate(req);
+    public APIWordSentence wordSentenceEvaluate(@RequestBody ModuleRequest req) throws Exception {
+        APIWordSentence response = evaluateService.wordSentenceModuleEvaluate(req);
         if (response == null)
             throw new Exception("调用失败，请重试");
         return response;

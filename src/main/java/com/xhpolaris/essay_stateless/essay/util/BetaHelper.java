@@ -2,8 +2,14 @@ package com.xhpolaris.essay_stateless.essay.util;
 
 import java.util.List;
 
-public class ResponseHandler {
+/**
+ * beta批改接口用到的工具类
+ */
+public class BetaHelper {
 
+    /**
+     * 段 -句 - 相对索引(句内)
+     */
     public static class GrammarPosition {
         public int paragraphIndex; // 段落索引
         public int sentenceIndex;  // 句子索引
@@ -16,6 +22,13 @@ public class ResponseHandler {
         }
     }
 
+    /**
+     * 将全文索引转换为 段-句相对索引
+     *
+     * @param text  段-句划分
+     * @param index 全文索引
+     * @return 相对索引
+     */
     public static GrammarPosition getSentenceRelativeIndex(List<List<String>> text, int index) {
         int currentPosition = 0; // 全文中当前字符的偏移量
         int paragraphIndex = 0;  // 当前段落索引
@@ -30,7 +43,6 @@ public class ResponseHandler {
                 // text中是不存在\n的
                 if (sentenceStart <= index - paragraphIndex && index - paragraphIndex < sentenceEnd) {
                     int relativeIndex = index - paragraphIndex; // 语法错误出现的位置相对于所遍历的该句子的偏移量
-                    //relativeIndex -= paragraphIndex;  // 修正下游算法不考虑/n带来的误差
                     return new GrammarPosition(paragraphIndex, sentenceIndex, relativeIndex);
                 }
 

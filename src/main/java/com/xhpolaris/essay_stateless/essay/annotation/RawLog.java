@@ -1,4 +1,4 @@
-package com.xhpolaris.essay_stateless.annotation;
+package com.xhpolaris.essay_stateless.essay.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

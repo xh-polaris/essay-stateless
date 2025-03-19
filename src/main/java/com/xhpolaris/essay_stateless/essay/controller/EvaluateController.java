@@ -1,18 +1,14 @@
 package com.xhpolaris.essay_stateless.essay.controller;
 
-import com.xhpolaris.essay_stateless.annotation.RawLog;
-import com.xhpolaris.essay_stateless.essay.entity.evaluation.BetaEvaluateResponse;
-import com.xhpolaris.essay_stateless.essay.entity.logs.RawLogs;
+import com.xhpolaris.essay_stateless.essay.annotation.RawLog;
+import com.xhpolaris.essay_stateless.essay.core.beta.BetaEvaluateResponse;
 import com.xhpolaris.essay_stateless.essay.req.BetaOcrEvaluateRequest;
 import com.xhpolaris.essay_stateless.essay.req.BetaEvaluateRequest;
 import com.xhpolaris.essay_stateless.essay.req.ScoreEvaluateRequest;
-import com.xhpolaris.essay_stateless.essay.entity.scoreEvaluation.ScoreEvaluateResponse;
-import com.xhpolaris.essay_stateless.essay.repo.RawLogsRepository;
+import com.xhpolaris.essay_stateless.essay.core.score.ScoreEvaluateResponse;
 import com.xhpolaris.essay_stateless.essay.core.EvaluateService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/evaluate")
@@ -27,7 +23,7 @@ public class EvaluateController {
     @PostMapping
     @RawLog("/evaluate")
     public BetaEvaluateResponse betaEvaluate(@RequestBody BetaEvaluateRequest req) throws Exception {
-        return evaluateService.evaluate(req.title, req.content, req.grade);
+        return evaluateService.betaEvaluate(req);
     }
 
     /**

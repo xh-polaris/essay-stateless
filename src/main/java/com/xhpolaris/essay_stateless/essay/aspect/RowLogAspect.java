@@ -1,7 +1,7 @@
-package com.xhpolaris.essay_stateless.aspect;
+package com.xhpolaris.essay_stateless.essay.aspect;
 
-import com.xhpolaris.essay_stateless.annotation.RawLog;
-import com.xhpolaris.essay_stateless.essay.entity.logs.RawLogs;
+import com.xhpolaris.essay_stateless.essay.annotation.RawLog;
+import com.xhpolaris.essay_stateless.essay.entity.RawLogs;
 import com.xhpolaris.essay_stateless.essay.repo.RawLogsRepository;
 import com.xhpolaris.essay_stateless.essay.req.EvaluateRequest;
 import com.xhpolaris.essay_stateless.essay.resp.EvaluateResponse;
@@ -13,6 +13,12 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+
+/**
+ * AOP日志
+ * 拦截所有@RawLog注解的方法，将uri、req、resp、create_time记录到数据库中
+ * req 和 resp 分别需要实现EvaluateReq和EvaluateResp
+ */
 
 @Aspect
 @Component
