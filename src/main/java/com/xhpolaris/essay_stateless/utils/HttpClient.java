@@ -41,7 +41,7 @@ public class HttpClient {
         return CompletableFuture.supplyAsync(() -> this.postForEntity(url, responseClass, body, header));
     }
 
-    // 同步调用接口卡
+    // 同步调用接口
     public <T> T syncCall(String url, Class<T> responseClass, Map<String, Object> body, Map<String, String> header) {
         return this.postForEntity(url, responseClass, body, header);
     }

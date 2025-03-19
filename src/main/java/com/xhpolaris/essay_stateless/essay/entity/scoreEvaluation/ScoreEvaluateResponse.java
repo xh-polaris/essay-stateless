@@ -2,12 +2,16 @@ package com.xhpolaris.essay_stateless.essay.entity.scoreEvaluation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xhpolaris.essay_stateless.essay.resp.EvaluateResponse;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ScoreEvaluationResponse {
+public class ScoreEvaluateResponse implements EvaluateResponse {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     private ScoreEvaluationResult ch;
 
     @Data
@@ -150,5 +154,14 @@ public class ScoreEvaluationResponse {
         private Integer score;
         @JsonProperty("score_str")
         private String scoreStr;
+    }
+
+    @Override
+    public String jsonString() {
+        try {
+            return objectMapper.writeValueAsString(this);
+        } catch (Exception e) {
+            return "序列化失败";
+        }
     }
 }

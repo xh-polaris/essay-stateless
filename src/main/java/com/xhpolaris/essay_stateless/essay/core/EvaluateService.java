@@ -1,12 +1,12 @@
 package com.xhpolaris.essay_stateless.essay.core;
 
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
-import com.xhpolaris.essay_stateless.essay.entity.evaluation.EvaluationResponse;
+import com.xhpolaris.essay_stateless.essay.entity.evaluation.BetaEvaluateResponse;
 import com.xhpolaris.essay_stateless.essay.entity.evaluation.api.*;
 import com.xhpolaris.essay_stateless.essay.entity.evaluation.fields.ModelVersion;
 import com.xhpolaris.essay_stateless.essay.req.ModuleRequest;
-import com.xhpolaris.essay_stateless.essay.req.ScoreEvaluationRequest;
-import com.xhpolaris.essay_stateless.essay.entity.scoreEvaluation.ScoreEvaluationResponse;
+import com.xhpolaris.essay_stateless.essay.req.ScoreEvaluateRequest;
+import com.xhpolaris.essay_stateless.essay.entity.scoreEvaluation.ScoreEvaluateResponse;
 import com.xhpolaris.essay_stateless.ocr.util.BeeOcrUtil;
 import com.xhpolaris.essay_stateless.utils.HttpClient;
 import lombok.AllArgsConstructor;
@@ -31,7 +31,7 @@ public class EvaluateService {
     /**
      * 对应beta版接口 (beta为学校算法代号)
      */
-    public EvaluationResponse evaluate(String title, String content, Integer grade) {
+    public BetaEvaluateResponse evaluate(String title, String content, Integer grade) {
         // 将标题和作文转成简体中文
         title = ZhConverterUtil.toSimple(title);
         content = ZhConverterUtil.toSimple(content);
@@ -73,7 +73,7 @@ public class EvaluateService {
         long totalTime = end - start;
         log.info("异步调用总耗时: {} 毫秒", totalTime);
 
-        EvaluationResponse response = new EvaluationResponse(mv);
+        BetaEvaluateResponse response = new BetaEvaluateResponse(mv);
         response.setTitle(title);
 
         // 处理评估结果
@@ -87,7 +87,7 @@ public class EvaluateService {
     /**
      * beta版带ocr的批改接口
      */
-    public EvaluationResponse betaOcrEvaluate(List<String> images, Integer grade) throws Exception {
+    public BetaEvaluateResponse betaOcrEvaluate(List<String> images, Integer grade) throws Exception {
         List<String> result = beeOcrUtil.OcrAll(images, "base64");
         return evaluate(result.get(0), result.get(1), grade);
     }
@@ -96,7 +96,7 @@ public class EvaluateService {
      * 对应score接口
      */
 
-    public ScoreEvaluationResponse evaluateScore(ScoreEvaluationRequest req) {
+    public ScoreEvaluateResponse evaluateScore(ScoreEvaluateRequest req) {
         Map<String, Object> essay = new HashMap<>();
         essay.put("title", req.getTitle());
         essay.put("text", req.getText());
@@ -104,7 +104,7 @@ public class EvaluateService {
         essay.put("grade", req.getGrade());
         essay.put("lang", req.getLang());
 
-        return httpClient.syncCall("score", ScoreEvaluationResponse.class, essay);
+        return httpClient.syncCall("score", ScoreEvaluateResponse.class, essay);
     }
     /*
      * 调用下游算法，通用类型

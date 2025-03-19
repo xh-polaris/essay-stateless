@@ -1,7 +1,9 @@
 package com.xhpolaris.essay_stateless.essay.entity.evaluation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xhpolaris.essay_stateless.entity.evaluation.api.*;
 import com.xhpolaris.essay_stateless.essay.entity.evaluation.api.*;
+import com.xhpolaris.essay_stateless.essay.resp.EvaluateResponse;
 import com.xhpolaris.essay_stateless.evaluation.api.*;
 import com.xhpolaris.essay_stateless.essay.entity.evaluation.fields.ModelVersion;
 import com.xhpolaris.essay_stateless.essay.entity.evaluation.fields.ParagraphEvaluation;
@@ -13,12 +15,14 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Data
-public class EvaluationResponse {
+public class BetaEvaluateResponse implements EvaluateResponse {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     public String title;
     public List<List<String>> text;
     public AIEvaluation aiEvaluation;
 
-    public EvaluationResponse(ModelVersion mv) {
+    public BetaEvaluateResponse(ModelVersion mv) {
         text = new ArrayList<>();
         aiEvaluation = new AIEvaluation(mv);
     }
@@ -228,6 +232,15 @@ public class EvaluationResponse {
             return response.get();
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    @Override
+    public String jsonString() {
+        try {
+            return objectMapper.writeValueAsString(this);
+        } catch (Exception e) {
+            return "序列化失败";
         }
     }
 }

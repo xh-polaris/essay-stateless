@@ -1,4 +1,4 @@
-package com.xhpolaris.essay_stateless.essay.repository;
+package com.xhpolaris.essay_stateless.essay.repo;
 
 import com.xhpolaris.essay_stateless.essay.entity.logs.RawLogs;
 import org.springframework.data.mongodb.repository.MongoRepository;

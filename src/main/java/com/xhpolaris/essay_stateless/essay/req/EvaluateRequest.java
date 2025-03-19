@@ -1,10 +1,9 @@
 package com.xhpolaris.essay_stateless.essay.req;
 
-import lombok.Data;
-
-@Data
-public class EvaluateRequest {
-    public String title;
-    public String content;
-    public Integer grade;
+/**
+ * 所有的批改请求需要实现的类
+ * 目前主要用于记录日志
+ */
+public interface EvaluateRequest {
+    String jsonString();
 }
