@@ -1,5 +1,6 @@
 package com.xhpolaris.essay_stateless.essay.core.beta.fields;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +23,7 @@ public class WordSentenceEvaluation {
 
     @Data
     public static class SentenceEvaluation {
+        @JsonProperty("isGoodSentence")
         // 是否是好句
         public boolean isGoodSentence;
         // 修辞标签

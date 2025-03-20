@@ -1,6 +1,7 @@
 package com.xhpolaris.essay_stateless.essay.core.beta;
 
-import com.xhpolaris.essay_stateless.essay.config.ModelVersion;
+import com.xhpolaris.essay_stateless.essay.config.BetaConfig;
+import com.xhpolaris.essay_stateless.essay.core.beta.fields.ModelVersion;
 import com.xhpolaris.essay_stateless.essay.core.beta.fields.*;
 import lombok.Data;
 
@@ -18,8 +19,8 @@ public class AIEvaluation {
     public SuggestionEvaluation suggestionEvaluation;
     public List<ParagraphEvaluation> paragraphEvaluations;
 
-    public AIEvaluation(ModelVersion mv) {
-        modelVersion = mv;
+    public AIEvaluation(BetaConfig.ModelVersion mv) {
+        modelVersion = new ModelVersion(mv.getName(), mv.getVersion());
         overallEvaluation = new OverallEvaluation();
         fluencyEvaluation = new FluencyEvaluation();
         wordSentenceEvaluation = new WordSentenceEvaluation();

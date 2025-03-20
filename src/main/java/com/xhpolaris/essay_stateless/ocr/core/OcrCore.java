@@ -38,6 +38,14 @@ public class OcrCore {
         return _provider.ocr(imgType, req);
     }
 
+    /**
+     * 带标题的ocr识别，获取识别的标题和文本
+     *
+     * @param provider 需要的ocr渠道
+     * @param imgType  提供的图片类型 url | base64
+     * @param req      ocr识别请求
+     * @return ocr识别结果
+     */
     public TitleOcrResponse titleOcr(String provider, String imgType, TitleOcrRequest req) throws Exception {
 
         // 根据provider从工厂类中获取具体的Ocr处理类

@@ -1,11 +1,17 @@
 package com.xhpolaris.essay_stateless.essay.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 
 /**
  * beta批改接口用到的工具类
  */
+@Slf4j
 public class BetaHelper {
+
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     /**
      * 段 -句 - 相对索引(句内)
@@ -53,5 +59,14 @@ public class BetaHelper {
         }
 
         return null; // 如果索引不在任何句子中
+    }
+
+    public static String jsonString(Object o) {
+        try {
+            return mapper.writeValueAsString(o);
+        } catch (Exception e) {
+            log.error("{} json化失败，err: {}", o, e.getMessage());
+            return "";
+        }
     }
 }

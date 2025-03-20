@@ -1,7 +1,6 @@
 package com.xhpolaris.essay_stateless.re;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.xhpolaris.essay_stateless.exception.BizException;
 import com.xhpolaris.essay_stateless.exception.ECode;
 import lombok.AllArgsConstructor;
@@ -18,7 +17,7 @@ public class Response {
     String msg;
 
     // 由于历史原因，data需要平铺而不是包裹在data中
-    @JsonUnwrapped
+//    @JsonUnwrapped
     @JsonInclude(JsonInclude.Include.NON_NULL)
     Object data;
 

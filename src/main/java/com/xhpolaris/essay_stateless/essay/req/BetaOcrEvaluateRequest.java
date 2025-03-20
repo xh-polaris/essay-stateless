@@ -14,6 +14,8 @@ public class BetaOcrEvaluateRequest implements EvaluateRequest {
 
     private String imageType;
 
+    private String provider;
+
     @Override
     public String jsonString() {
         StringBuilder json = new StringBuilder();

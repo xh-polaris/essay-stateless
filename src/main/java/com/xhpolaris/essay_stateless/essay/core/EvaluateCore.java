@@ -1,45 +1,39 @@
 package com.xhpolaris.essay_stateless.essay.core;
 
-import com.github.houbb.opencc4j.util.ZhConverterUtil;
-import com.xhpolaris.essay_stateless.essay.config.BetaUrlConfig;
+import com.xhpolaris.essay_stateless.essay.config.BetaConfig;
 import com.xhpolaris.essay_stateless.essay.core.beta.api.*;
 import com.xhpolaris.essay_stateless.essay.core.beta.BetaEvaluateResponse;
-import com.xhpolaris.essay_stateless.essay.config.ModelVersion;
 import com.xhpolaris.essay_stateless.essay.req.BetaEvaluateRequest;
 import com.xhpolaris.essay_stateless.essay.req.BetaOcrEvaluateRequest;
-import com.xhpolaris.essay_stateless.essay.req.ModuleRequest;
-import com.xhpolaris.essay_stateless.essay.req.ScoreEvaluateRequest;
-import com.xhpolaris.essay_stateless.essay.core.score.ScoreEvaluateResponse;
+import com.xhpolaris.essay_stateless.exception.BizException;
+import com.xhpolaris.essay_stateless.exception.ECode;
 import com.xhpolaris.essay_stateless.ocr.core.OcrCore;
 import com.xhpolaris.essay_stateless.ocr.req.TitleOcrRequest;
 import com.xhpolaris.essay_stateless.ocr.resp.TitleOcrResponse;
-import com.xhpolaris.essay_stateless.ocr.util.BeeOcrUtil;
 import com.xhpolaris.essay_stateless.utils.HttpClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Service
 @AllArgsConstructor
 @Slf4j
-public class EvaluateService {
+public class EvaluateCore {
     private final HttpClient httpClient;
     private final OcrCore ocrCore;
-    private final BetaUrlConfig betaUrl;
-    private final ModelVersion mv;
+    private final BetaConfig betaConfig;
 
     /**
      * 对应beta版接口 (beta为学校算法代号)
      */
-    public BetaEvaluateResponse betaEvaluate(BetaEvaluateRequest req) {
+    public BetaEvaluateResponse betaEvaluate(BetaEvaluateRequest req) throws Exception {
 
         // 初始化批改结果
-        BetaEvaluateResponse response = new BetaEvaluateResponse(mv);
+        BetaEvaluateResponse response = new BetaEvaluateResponse(betaConfig.getModelVersion());
 
         // 作文基本信息，作为请求体
         Map<String, Object> _essay = new HashMap<>();
@@ -47,7 +41,7 @@ public class EvaluateService {
         _essay.put("essay", req.content);
 
         // 同步调用获取作文基本信息
-        APIEssayInfo info = httpClient.syncCall(betaUrl.getEssayInfo(), APIEssayInfo.class, _essay, null);
+        APIEssayInfo info = httpClient.syncCall(betaConfig.getApi().getEssayInfo(), APIEssayInfo.class, _essay, null);
         // 如果用户调用请求时携带了年级，则使用用户指定的年级
         if (req.grade != null) {
             info.grade = req.grade;
@@ -64,19 +58,19 @@ public class EvaluateService {
 
         // 异步调用多个评估api，参数依次是url，返回的类型，文章内容map,header
         // 总评
-        CompletableFuture<APIOverall> overall = httpClient.asyncCall(betaUrl.getOverall(), APIOverall.class, _essay, null);
+        CompletableFuture<APIOverall> overall = httpClient.asyncCall(betaConfig.getApi().getOverall(), APIOverall.class, _essay, null);
         // 流畅度
-        CompletableFuture<APIFluency> fluency = httpClient.asyncCall(betaUrl.getFluency(), APIFluency.class, _essay, null);
+        CompletableFuture<APIFluency> fluency = httpClient.asyncCall(betaConfig.getApi().getFluency(), APIFluency.class, _essay, null);
         // 好词好句
-        CompletableFuture<APIWordSentence> wordSentence = httpClient.asyncCall(betaUrl.getWordSentence(), APIWordSentence.class, _essay, null);
+        CompletableFuture<APIWordSentence> wordSentence = httpClient.asyncCall(betaConfig.getApi().getWordSentence(), APIWordSentence.class, _essay, null);
         // 语法纠错
-        CompletableFuture<APIGrammarInfo> grammarInfo = httpClient.asyncCall(betaUrl.getGrammarInfo(), APIGrammarInfo.class, _essay, null);
+        CompletableFuture<APIGrammarInfo> grammarInfo = httpClient.asyncCall(betaConfig.getApi().getGrammarInfo(), APIGrammarInfo.class, _essay, null);
         // 表达
-        CompletableFuture<APIExpression> expression = httpClient.asyncCall(betaUrl.getExpression(), APIExpression.class, _essay, null);
+        CompletableFuture<APIExpression> expression = httpClient.asyncCall(betaConfig.getApi().getExpression(), APIExpression.class, _essay, null);
         // 修改建议
-        CompletableFuture<APISuggestion> suggestion = httpClient.asyncCall(betaUrl.getSuggestion(), APISuggestion.class, _essay, null);
+        CompletableFuture<APISuggestion> suggestion = httpClient.asyncCall(betaConfig.getApi().getSuggestion(), APISuggestion.class, _essay, null);
         // 段落点评
-        CompletableFuture<APIParagraph> paragraph = httpClient.asyncCall(betaUrl.getParagraph(), APIParagraph.class, _essay, null);
+        CompletableFuture<APIParagraph> paragraph = httpClient.asyncCall(betaConfig.getApi().getParagraph(), APIParagraph.class, _essay, null);
 
 
         // 等待所有的异步任务完成
@@ -88,8 +82,12 @@ public class EvaluateService {
         long totalTime = end - start;
         log.info("beta批改调用总耗时: {} 毫秒", totalTime);
 
-        // 处理评估结果
-        response.process(overall, fluency, wordSentence, grammarInfo, expression, suggestion, paragraph);
+        try {
+            // 处理评估结果
+            response.process(overall, fluency, wordSentence, grammarInfo, expression, suggestion, paragraph);
+        } catch (Exception e) {
+            throw new BizException(ECode.BIZ_ESSAY_DEFAULT);
+        }
         // 返回
         return response;
 
@@ -103,9 +101,9 @@ public class EvaluateService {
         // 构造ocr请求
         String imgType = req.getImageType() == null ? "base64" : req.getImageType();
         TitleOcrRequest ocrReq = new TitleOcrRequest(req.getImages(), req.getLeftType());
-
+        String provider = req.getProvider() == null ? "bee":req.getProvider();
         // 获取ocr识别结果
-        TitleOcrResponse ocrResp = ocrCore.titleOcr("beta", imgType, ocrReq);
+        TitleOcrResponse ocrResp = ocrCore.titleOcr(provider, imgType, ocrReq);
 
         // 构造批改请求
         BetaEvaluateRequest betaReq = new BetaEvaluateRequest(ocrResp.getTitle(), ocrResp.getContent(), req.getGrade());

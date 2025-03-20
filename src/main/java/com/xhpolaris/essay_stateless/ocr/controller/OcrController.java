@@ -20,10 +20,16 @@ public class OcrController {
      * @return OCR 识别结果
      */
     @PostMapping("/ocr/{provider}/{imgType}")
-    public Response DefaultOcr(@PathVariable String provider, @PathVariable String imgType, @RequestBody DefaultOcrRequest req) throws Exception {
+    public Response defaultOcr(@PathVariable String provider, @PathVariable String imgType, @RequestBody DefaultOcrRequest req) throws Exception {
         return Response.Succeed(OCRCore.defaultOcr(provider, imgType, req));
     }
 
+    /**
+     * @param provider OCR的提供者, textin or bee
+     * @param imgType  OCR识别类型, url or base64
+     * @param req      OCR识别请求
+     * @return OCR 识别结果，包含标题
+     */
     @PostMapping("/ocr/title/{provider}/{imgType}")
     public Response titleOcr(@PathVariable String provider, @PathVariable String imgType, @RequestBody TitleOcrRequest req) throws Exception {
         return Response.Succeed(OCRCore.titleOcr(provider, imgType, req));

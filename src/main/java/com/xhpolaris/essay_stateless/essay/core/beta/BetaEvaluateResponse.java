@@ -1,7 +1,6 @@
 package com.xhpolaris.essay_stateless.essay.core.beta;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xhpolaris.essay_stateless.essay.config.ModelVersion;
+import com.xhpolaris.essay_stateless.essay.config.BetaConfig;
 import com.xhpolaris.essay_stateless.essay.core.beta.api.*;
 import com.xhpolaris.essay_stateless.essay.core.beta.fields.*;
 import com.xhpolaris.essay_stateless.essay.resp.EvaluateResponse;
@@ -21,8 +20,6 @@ import java.util.concurrent.CompletableFuture;
 @Data
 public class BetaEvaluateResponse implements EvaluateResponse {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     private String title;
     private List<List<String>> text;
     private EssayInfo essayInfo;
@@ -33,8 +30,9 @@ public class BetaEvaluateResponse implements EvaluateResponse {
      *
      * @param mv 模型信息
      */
-    public BetaEvaluateResponse(ModelVersion mv) {
+    public BetaEvaluateResponse(BetaConfig.ModelVersion mv) {
         text = new ArrayList<>();
+        essayInfo = new EssayInfo();
         aiEvaluation = new AIEvaluation(mv);
     }
 
@@ -236,7 +234,7 @@ public class BetaEvaluateResponse implements EvaluateResponse {
     @Override
     public String jsonString() {
         try {
-            return objectMapper.writeValueAsString(this);
+            return BetaHelper.jsonString(this);
         } catch (Exception e) {
             return "序列化失败";
         }

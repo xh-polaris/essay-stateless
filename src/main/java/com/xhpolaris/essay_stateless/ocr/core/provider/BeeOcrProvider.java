@@ -15,7 +15,6 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @Component
@@ -62,7 +61,7 @@ public class BeeOcrProvider implements OcrProvider {
     private List<String> _ocr(List<String> images, String imgType, String leftType) throws Exception {
         // 构造请求头
         if (headers == null) {
-            headers = Map.of("x-app-secret", config.getXAppKey(), "x-app-key", config.getXAppSecret());
+            headers = Map.of("x-app-key", config.getXAppKey(), "x-app-secret", config.getXAppSecret());
         }
 
         // 识别结果
@@ -94,13 +93,13 @@ public class BeeOcrProvider implements OcrProvider {
                 throw new BizException(ECode.BIZ_OCR_DEFAULT);
 
             // 获取响应中的数据部分
-            Map<String, Object> data = objectMapper.convertValue(_resp.get("data"), new TypeReference<Map<String, Object>>() {
+            Map<String, Object> data = objectMapper.convertValue(_resp.get("data"), new TypeReference<>() {
             });
             // 获取识别的每一行
-            List<Map<String, Object>> lines = objectMapper.convertValue(data.get("lines"), new TypeReference<List<Map<String, Object>>>() {
+            List<Map<String, Object>> lines = objectMapper.convertValue(data.get("lines"), new TypeReference<>() {
             });
             // 获取识别的每一个区域
-            List<Map<String, Object>> areas = objectMapper.convertValue(data.get("areas"), new TypeReference<List<Map<String, Object>>>() {
+            List<Map<String, Object>> areas = objectMapper.convertValue(data.get("areas"), new TypeReference<>() {
             });
 
             // 获取需要排除的

@@ -2,11 +2,13 @@ package com.xhpolaris.essay_stateless.essay.core.beta.fields;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 作文基本信息
  */
 @Data
+@NoArgsConstructor
 public class EssayInfo {
     // 作文类型
     public String essayType;

@@ -1,12 +1,10 @@
 package com.xhpolaris.essay_stateless.essay.controller;
 
 import com.xhpolaris.essay_stateless.essay.annotation.RawLog;
-import com.xhpolaris.essay_stateless.essay.core.beta.BetaEvaluateResponse;
 import com.xhpolaris.essay_stateless.essay.req.BetaOcrEvaluateRequest;
 import com.xhpolaris.essay_stateless.essay.req.BetaEvaluateRequest;
-import com.xhpolaris.essay_stateless.essay.req.ScoreEvaluateRequest;
-import com.xhpolaris.essay_stateless.essay.core.score.ScoreEvaluateResponse;
-import com.xhpolaris.essay_stateless.essay.core.EvaluateService;
+import com.xhpolaris.essay_stateless.essay.core.EvaluateCore;
+import com.xhpolaris.essay_stateless.re.Response;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,15 +13,15 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class EvaluateController {
 
-    private final EvaluateService evaluateService;
+    private final EvaluateCore evaluateService;
 
     /**
      * beta版批改接口
      */
     @PostMapping
     @RawLog("/evaluate")
-    public BetaEvaluateResponse betaEvaluate(@RequestBody BetaEvaluateRequest req) throws Exception {
-        return evaluateService.betaEvaluate(req);
+    public Response betaEvaluate(@RequestBody BetaEvaluateRequest req) throws Exception {
+        return Response.Succeed(evaluateService.betaEvaluate(req));
     }
 
     /**
@@ -31,8 +29,8 @@ public class EvaluateController {
      */
     @PostMapping("/beta/ocr")
     @RawLog("/evaluate/beta/ocr")
-    public BetaEvaluateResponse betaOcrEvaluate(@RequestBody BetaOcrEvaluateRequest req) throws Exception {
-        return evaluateService.betaOcrEvaluate(req);
+    public Response betaOcrEvaluate(@RequestBody BetaOcrEvaluateRequest req) throws Exception {
+        return Response.Succeed(evaluateService.betaOcrEvaluate(req));
     }
 
 //    /** 暂时没有在用的，先注释掉
