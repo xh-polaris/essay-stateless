@@ -10,6 +10,8 @@ public class BetaOcrEvaluateRequest implements EvaluateRequest {
 
     private Integer grade;
 
+    private String essayType;
+
     private String leftType;
 
     private String imageType;

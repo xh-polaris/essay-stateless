@@ -46,6 +46,9 @@ public class EvaluateCore {
         if (req.grade != null) {
             info.grade = req.grade;
         }
+        if (req.essayType != null) {
+            info.essayType = req.essayType;
+        }
 
         response.processEssayInfo(req.title, info);
 
@@ -101,12 +104,12 @@ public class EvaluateCore {
         // 构造ocr请求
         String imgType = req.getImageType() == null ? "base64" : req.getImageType();
         TitleOcrRequest ocrReq = new TitleOcrRequest(req.getImages(), req.getLeftType());
-        String provider = req.getProvider() == null ? "bee":req.getProvider();
+        String provider = req.getProvider() == null ? "bee" : req.getProvider();
         // 获取ocr识别结果
         TitleOcrResponse ocrResp = ocrCore.titleOcr(provider, imgType, ocrReq);
 
         // 构造批改请求
-        BetaEvaluateRequest betaReq = new BetaEvaluateRequest(ocrResp.getTitle(), ocrResp.getContent(), req.getGrade());
+        BetaEvaluateRequest betaReq = new BetaEvaluateRequest(ocrResp.getTitle(), ocrResp.getContent(), req.getGrade(), req.getEssayType());
         return betaEvaluate(betaReq);
     }
 

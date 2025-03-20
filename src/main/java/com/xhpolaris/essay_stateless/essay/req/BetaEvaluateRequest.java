@@ -15,6 +15,8 @@ public class BetaEvaluateRequest implements EvaluateRequest {
     public String content;
     // 年纪
     public Integer grade;
+    // 作文类型
+    public String essayType;
 
     @Override
     public String jsonString() {
