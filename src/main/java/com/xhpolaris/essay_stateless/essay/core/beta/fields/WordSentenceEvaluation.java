@@ -16,8 +16,6 @@ import java.util.Map;
 public class WordSentenceEvaluation {
     // 好词好句评分
     public int wordSentenceScore;
-    // 好词好句描述
-    public String wordSentenceDescription;
     // 句子点评 - 依据段-句划分
     public List<List<SentenceEvaluation>> sentenceEvaluations = new ArrayList<>();
 
