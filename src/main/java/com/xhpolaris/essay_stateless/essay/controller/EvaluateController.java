@@ -32,15 +32,15 @@ public class EvaluateController {
     @PostMapping("/beta/ocr")
     @RawLog("/evaluate/beta/ocr")
     public BetaEvaluateResponse betaOcrEvaluate(@RequestBody BetaOcrEvaluateRequest req) throws Exception {
-        return evaluateService.betaOcrEvaluate(req.getImages(), req.getGrade());
+        return evaluateService.betaOcrEvaluate(req);
     }
 
-    /**
-     * score版接口
-     */
-    @PostMapping("/score")
-    @RawLog("/evaluate/score")
-    public ScoreEvaluateResponse scoreEvaluate(@RequestBody ScoreEvaluateRequest req) throws Exception {
-        return evaluateService.evaluateScore(req);
-    }
+//    /** 暂时没有在用的，先注释掉
+//     * score版接口
+//     */
+//    @PostMapping("/score")
+//    @RawLog("/evaluate/score")
+//    public ScoreEvaluateResponse scoreEvaluate(@RequestBody ScoreEvaluateRequest req) throws Exception {
+//        return evaluateService.evaluateScore(req);
+//    }
 }

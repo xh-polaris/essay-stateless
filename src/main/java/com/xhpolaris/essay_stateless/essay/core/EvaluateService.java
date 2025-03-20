@@ -6,9 +6,13 @@ import com.xhpolaris.essay_stateless.essay.core.beta.api.*;
 import com.xhpolaris.essay_stateless.essay.core.beta.BetaEvaluateResponse;
 import com.xhpolaris.essay_stateless.essay.config.ModelVersion;
 import com.xhpolaris.essay_stateless.essay.req.BetaEvaluateRequest;
+import com.xhpolaris.essay_stateless.essay.req.BetaOcrEvaluateRequest;
 import com.xhpolaris.essay_stateless.essay.req.ModuleRequest;
 import com.xhpolaris.essay_stateless.essay.req.ScoreEvaluateRequest;
 import com.xhpolaris.essay_stateless.essay.core.score.ScoreEvaluateResponse;
+import com.xhpolaris.essay_stateless.ocr.core.OcrCore;
+import com.xhpolaris.essay_stateless.ocr.req.TitleOcrRequest;
+import com.xhpolaris.essay_stateless.ocr.resp.TitleOcrResponse;
 import com.xhpolaris.essay_stateless.ocr.util.BeeOcrUtil;
 import com.xhpolaris.essay_stateless.utils.HttpClient;
 import lombok.AllArgsConstructor;
@@ -25,7 +29,7 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class EvaluateService {
     private final HttpClient httpClient;
-    private final BeeOcrUtil beeOcrUtil;
+    private final OcrCore ocrCore;
     private final BetaUrlConfig betaUrl;
     private final ModelVersion mv;
 
@@ -91,14 +95,22 @@ public class EvaluateService {
 
     }
 
-//    /**
-//     * beta版带ocr的批改接口 TODO 带标题批改
-//     */
-//    public BetaEvaluateResponse betaOcrEvaluate(List<String> images, Integer grade) throws Exception {
-//        List<String> result = beeOcrUtil.OcrAll(images, "base64");
-//        BetaEvaluateRequest request = new BetaEvaluateRequest(result.title);
-//        return betaEvaluate(result.get(0), result.get(1), grade);
-//    }
+    /**
+     * beta版带ocr的批改接口
+     * 会返回标题
+     */
+    public BetaEvaluateResponse betaOcrEvaluate(BetaOcrEvaluateRequest req) throws Exception {
+        // 构造ocr请求
+        String imgType = req.getImageType() == null ? "base64" : req.getImageType();
+        TitleOcrRequest ocrReq = new TitleOcrRequest(req.getImages(), req.getLeftType());
+
+        // 获取ocr识别结果
+        TitleOcrResponse ocrResp = ocrCore.titleOcr("beta", imgType, ocrReq);
+
+        // 构造批改请求
+        BetaEvaluateRequest betaReq = new BetaEvaluateRequest(ocrResp.getTitle(), ocrResp.getContent(), req.getGrade());
+        return betaEvaluate(betaReq);
+    }
 
 //    /*
 //     * 对应score接口

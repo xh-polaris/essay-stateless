@@ -6,13 +6,16 @@ import com.xhpolaris.essay_stateless.exception.BizException;
 import com.xhpolaris.essay_stateless.exception.ECode;
 import com.xhpolaris.essay_stateless.ocr.config.BeeOcrConfig;
 import com.xhpolaris.essay_stateless.ocr.req.DefaultOcrRequest;
+import com.xhpolaris.essay_stateless.ocr.req.TitleOcrRequest;
 import com.xhpolaris.essay_stateless.ocr.resp.DefaultOcrResponse;
+import com.xhpolaris.essay_stateless.ocr.resp.TitleOcrResponse;
 import com.xhpolaris.essay_stateless.utils.HttpClient;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 @Component
@@ -26,6 +29,37 @@ public class BeeOcrProvider implements OcrProvider {
 
     @Override
     public DefaultOcrResponse ocr(String imgType, DefaultOcrRequest req) throws Exception {
+
+        // 图片,保留类型
+        List<String> images = req.getImages();
+        String leftType = (Optional.ofNullable(req.getLeftType()).orElse("all"));
+
+        // 识别图片
+        List<String> result = _ocr(images, imgType, leftType);
+
+        // 组合结果, 默认Ocr不带标题
+        String content = Strings.join(result, '\n');
+        return new DefaultOcrResponse(null, content);
+    }
+
+    @Override
+    public TitleOcrResponse titleOcr(String imgType, TitleOcrRequest req) throws Exception {
+
+        // 图片,保留类型
+        List<String> images = req.getImages();
+        String leftType = (Optional.ofNullable(req.getLeftType()).orElse("all"));
+
+        // 识别图片
+        List<String> result = _ocr(images, imgType, leftType);
+
+        // 获取标题和内容
+        String title = result.isEmpty() ? "" : result.get(0);
+        String content = result.size() <= 1 ? "" : Strings.join(result.subList(1, result.size()), '\n');
+
+        return new TitleOcrResponse(title, content);
+    }
+
+    private List<String> _ocr(List<String> images, String imgType, String leftType) throws Exception {
         // 构造请求头
         if (headers == null) {
             headers = Map.of("x-app-secret", config.getXAppKey(), "x-app-key", config.getXAppSecret());
@@ -35,18 +69,13 @@ public class BeeOcrProvider implements OcrProvider {
         List<String> results = new ArrayList<>();
 
         // 图片,保留类型,图片类型参数
-        List<String> images = req.getImages();
         String imageParam = "image_" + imgType;
-        String leftType = (Optional.ofNullable(req.getLeftType()).orElse("all"));
 
         // 识别每一张图片
         for (String image : images) {
             ocrOne(results, config.getOcr(), image, imageParam, leftType);
         }
-
-        // 组合结果, 默认Ocr不带标题
-        String content = Strings.join(results, '\n');
-        return new DefaultOcrResponse(null, content);
+        return results;
     }
 
     private void ocrOne(List<String> results, String url, String image, String imageParam, String leftType) throws Exception {

@@ -1,16 +1,17 @@
 package com.xhpolaris.essay_stateless.ocr.req;
 
-
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.List;
 
 /**
- * 默认Ocr请求
- * 不自动划分标题
+ * 标题OCR请求
+ * 除了主体外，还会自动划分标题
  */
-@Data
-public class DefaultOcrRequest implements OcrRequest {
+@Getter
+@AllArgsConstructor
+public class TitleOcrRequest {
     // 图片列表，url 或 base64
     private List<String> images;
 

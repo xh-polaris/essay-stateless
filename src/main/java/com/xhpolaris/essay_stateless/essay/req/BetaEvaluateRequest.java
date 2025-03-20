@@ -1,11 +1,13 @@
 package com.xhpolaris.essay_stateless.essay.req;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * Beta版批改请求
  */
 @Data
+@AllArgsConstructor
 public class BetaEvaluateRequest implements EvaluateRequest {
     // 作文标题
     public String title;

@@ -3,7 +3,9 @@ package com.xhpolaris.essay_stateless.ocr.core;
 import com.xhpolaris.essay_stateless.ocr.core.provider.OcrProvider;
 import com.xhpolaris.essay_stateless.ocr.core.provider.OcrProviderFactory;
 import com.xhpolaris.essay_stateless.ocr.req.DefaultOcrRequest;
+import com.xhpolaris.essay_stateless.ocr.req.TitleOcrRequest;
 import com.xhpolaris.essay_stateless.ocr.resp.DefaultOcrResponse;
+import com.xhpolaris.essay_stateless.ocr.resp.TitleOcrResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,5 +36,14 @@ public class OcrCore {
 
         // 识别ocr结果
         return _provider.ocr(imgType, req);
+    }
+
+    public TitleOcrResponse titleOcr(String provider, String imgType, TitleOcrRequest req) throws Exception {
+
+        // 根据provider从工厂类中获取具体的Ocr处理类
+        OcrProvider _provider = factory.getOcrProvider(provider);
+
+        // 识别ocr结果
+        return _provider.titleOcr(imgType, req);
     }
 }
