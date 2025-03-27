@@ -77,9 +77,7 @@ public class EvaluateCore {
 
 
         // 等待所有的异步任务完成
-        CompletableFuture.allOf(grammarInfo, fluency, expression,
-                suggestion, wordSentence,
-                paragraph, overall).join();
+        CompletableFuture.allOf(grammarInfo, fluency, expression, suggestion, wordSentence, paragraph, overall).join();
 
         long end = System.currentTimeMillis();
         long totalTime = end - start;

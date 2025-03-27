@@ -48,7 +48,7 @@ public class BetaHelper {
                 // 下游算法计算索引时考虑了\n的位置
                 // text中是不存在\n的
                 if (sentenceStart <= index - paragraphIndex && index - paragraphIndex < sentenceEnd) {
-                    int relativeIndex = index - paragraphIndex; // 语法错误出现的位置相对于所遍历的该句子的偏移量
+                    int relativeIndex = index - paragraphIndex - sentenceStart; // 语法错误出现的位置相对于所遍历的该句子的偏移量 // 语法错误出现的位置相对于所遍历的该句子的偏移量
                     return new GrammarPosition(paragraphIndex, sentenceIndex, relativeIndex);
                 }
 

@@ -139,7 +139,6 @@ public class BetaEvaluateResponse implements EvaluateResponse {
         });
 
         this.aiEvaluation.wordSentenceEvaluation.sentenceEvaluations = sentencesEvaluations;
-        this.aiEvaluation.wordSentenceEvaluation.wordSentenceDescription = response.comment;
         this.aiEvaluation.wordSentenceEvaluation.wordSentenceScore = response.score;
     }
 
