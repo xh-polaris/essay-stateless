@@ -1,5 +1,6 @@
 package com.xhpolaris.essay_stateless.essay.config;
 
+import com.xhpolaris.essay_stateless.essay.util.CozeAdaptor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,6 +20,9 @@ public class BetaConfig {
     @NestedConfigurationProperty
     private ModelVersion modelVersion;
 
+    @NestedConfigurationProperty
+    private CozeBot cozeBot;
+
     @Getter
     @Setter
     public static class BetaApi {
@@ -30,6 +34,15 @@ public class BetaConfig {
         private String paragraph;
         private String grammarInfo;
         private String essayInfo;
+    }
+
+    @Getter
+    @Setter
+    public static class CozeBot {
+        private String user;
+        private String token;
+        private String base;
+        private String wordSentence;
     }
 
     @Getter

@@ -50,6 +50,8 @@ public class APIWordSentence extends APICommon {
         public Integer start;
         // 结束索引
         public Integer end;
+        // coze: comment
+        public String comment;
     }
 
     @Getter
@@ -63,5 +65,11 @@ public class APIWordSentence extends APICommon {
         public Integer sentId;
         // 修辞手法
         public String label;
+        // coze: type
+        public String Type;
+        // coze: comment
+        public String comment;
+        // coze: score
+        public Integer score;
     }
 }

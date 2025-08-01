@@ -121,9 +121,11 @@ public class BetaEvaluateResponse implements EvaluateResponse {
             // 设置好句信息
             sentenceEvaluation.isGoodSentence = true;
             sentenceEvaluation.label = sent.getLabel();
+            sentenceEvaluation.comment = sent.getComment();
+            sentenceEvaluation.score = sent.getScore();
             Map<String, String> type = new HashMap<>();
-            type.put("level1", "作文亮点");
-            type.put("level2", "好句");
+            type.put("level1", sent.getType());
+            type.put("level2", sent.getLabel());
             sentenceEvaluation.type = type;
         });
 
@@ -135,6 +137,7 @@ public class BetaEvaluateResponse implements EvaluateResponse {
             wordEvaluation.span.add(word.end);
             wordEvaluation.type.put("level1", "作文亮点");
             wordEvaluation.type.put("level2", "好词");
+            wordEvaluation.comment =  word.getComment();
             sentencesEvaluations.get(word.getParagraphId()).get(word.getSentId()).wordEvaluations.add(wordEvaluation);
         });
 

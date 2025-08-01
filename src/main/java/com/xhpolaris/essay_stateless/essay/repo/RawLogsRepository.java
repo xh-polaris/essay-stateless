@@ -6,5 +6,4 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface RawLogsRepository extends MongoRepository<RawLogs,String> {
-
 }

@@ -28,6 +28,10 @@ public class WordSentenceEvaluation {
         public String label;
         // 类型
         public Map<String, String> type = new HashMap<>();
+        // 评价
+        public String comment;
+        // 得分
+        public Integer score;
         // 句中词评价
         public List<WordEvaluation> wordEvaluations = new ArrayList<>();
     }
@@ -40,6 +44,8 @@ public class WordSentenceEvaluation {
         public String ori;
         // 修改后
         public String revised;
+        // 评价
+        public String comment;
         // 错误类型标签 level1: 还需努力; level2: 具体错误
         public Map<String, String> type = new HashMap<>();
     }

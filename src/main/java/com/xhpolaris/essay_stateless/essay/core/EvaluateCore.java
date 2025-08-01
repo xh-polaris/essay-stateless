@@ -5,11 +5,13 @@ import com.xhpolaris.essay_stateless.essay.core.beta.api.*;
 import com.xhpolaris.essay_stateless.essay.core.beta.BetaEvaluateResponse;
 import com.xhpolaris.essay_stateless.essay.req.BetaEvaluateRequest;
 import com.xhpolaris.essay_stateless.essay.req.BetaOcrEvaluateRequest;
+import com.xhpolaris.essay_stateless.essay.util.CozeAdaptor;
 import com.xhpolaris.essay_stateless.exception.BizException;
 import com.xhpolaris.essay_stateless.exception.ECode;
 import com.xhpolaris.essay_stateless.ocr.core.OcrCore;
 import com.xhpolaris.essay_stateless.ocr.req.TitleOcrRequest;
 import com.xhpolaris.essay_stateless.ocr.resp.TitleOcrResponse;
+import com.xhpolaris.essay_stateless.utils.CozeHelper;
 import com.xhpolaris.essay_stateless.utils.HttpClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,7 @@ public class EvaluateCore {
     private final HttpClient httpClient;
     private final OcrCore ocrCore;
     private final BetaConfig betaConfig;
+    private final CozeAdaptor cozeAdaptor;
 
     /**
      * 对应beta版接口 (beta为学校算法代号)
@@ -58,35 +61,37 @@ public class EvaluateCore {
 
         // 用于记录调用耗时
         long start = System.currentTimeMillis();
-
-        // 异步调用多个评估api，参数依次是url，返回的类型，文章内容map,header
-        // 总评
-        CompletableFuture<APIOverall> overall = httpClient.asyncCall(betaConfig.getApi().getOverall(), APIOverall.class, _essay, null);
-        // 流畅度
-        CompletableFuture<APIFluency> fluency = httpClient.asyncCall(betaConfig.getApi().getFluency(), APIFluency.class, _essay, null);
-        // 好词好句
-        CompletableFuture<APIWordSentence> wordSentence = httpClient.asyncCall(betaConfig.getApi().getWordSentence(), APIWordSentence.class, _essay, null);
-        // 语法纠错
-        CompletableFuture<APIGrammarInfo> grammarInfo = httpClient.asyncCall(betaConfig.getApi().getGrammarInfo(), APIGrammarInfo.class, _essay, null);
-        // 表达
-        CompletableFuture<APIExpression> expression = httpClient.asyncCall(betaConfig.getApi().getExpression(), APIExpression.class, _essay, null);
-        // 修改建议
-        CompletableFuture<APISuggestion> suggestion = httpClient.asyncCall(betaConfig.getApi().getSuggestion(), APISuggestion.class, _essay, null);
-        // 段落点评
-        CompletableFuture<APIParagraph> paragraph = httpClient.asyncCall(betaConfig.getApi().getParagraph(), APIParagraph.class, _essay, null);
-
-
-        // 等待所有的异步任务完成
-        CompletableFuture.allOf(grammarInfo, fluency, expression, suggestion, wordSentence, paragraph, overall).join();
-
-        long end = System.currentTimeMillis();
-        long totalTime = end - start;
-        log.info("beta批改调用总耗时: {} 毫秒", totalTime);
-
         try {
+            // 异步调用多个评估api，参数依次是url，返回的类型，文章内容map,header
+            // 总评
+            CompletableFuture<APIOverall> overall = httpClient.asyncCall(betaConfig.getApi().getOverall(), APIOverall.class, _essay, null);
+            // 流畅度
+            CompletableFuture<APIFluency> fluency = httpClient.asyncCall(betaConfig.getApi().getFluency(), APIFluency.class, _essay, null);
+            // 好词好句
+            BetaConfig.CozeBot cozeConf = betaConfig.getCozeBot();
+            CozeHelper helper = new CozeHelper(cozeConf.getBase(), cozeConf.getToken(), cozeConf.getWordSentence(), cozeConf.getUser(), 40000);
+            CompletableFuture<APIWordSentence> wordSentence = cozeAdaptor.wordSentenceAsync(helper, _essay);
+//            CompletableFuture<APIWordSentence> wordSentence = httpClient.asyncCall(betaConfig.getApi().getWordSentence(), APIWordSentence.class, _essay, null);
+            // 语法纠错
+            CompletableFuture<APIGrammarInfo> grammarInfo = httpClient.asyncCall(betaConfig.getApi().getGrammarInfo(), APIGrammarInfo.class, _essay, null);
+            // 表达
+            CompletableFuture<APIExpression> expression = httpClient.asyncCall(betaConfig.getApi().getExpression(), APIExpression.class, _essay, null);
+            // 修改建议
+            CompletableFuture<APISuggestion> suggestion = httpClient.asyncCall(betaConfig.getApi().getSuggestion(), APISuggestion.class, _essay, null);
+            // 段落点评
+            CompletableFuture<APIParagraph> paragraph = httpClient.asyncCall(betaConfig.getApi().getParagraph(), APIParagraph.class, _essay, null);
+
+
+            // 等待所有的异步任务完成
+            CompletableFuture.allOf(grammarInfo, fluency, expression, suggestion, wordSentence, paragraph, overall).join();
+
+            long end = System.currentTimeMillis();
+            long totalTime = end - start;
+            log.info("beta批改调用总耗时: {} 毫秒", totalTime);
             // 处理评估结果
             response.process(overall, fluency, wordSentence, grammarInfo, expression, suggestion, paragraph);
         } catch (Exception e) {
+            log.error("批改错误: {}", e.getMessage());
             throw new BizException(ECode.BIZ_ESSAY_DEFAULT);
         }
         // 返回
